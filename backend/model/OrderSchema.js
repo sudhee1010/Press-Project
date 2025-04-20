@@ -1,12 +1,14 @@
 import mongoose, { Schema } from "mongoose"
 const OrderSchema = new Schema({
-    tokenNumber: String, // Unique token given to the customer
-
+    tokenNumber: {
+        type: String, // Unique token given to the customer
+        required: true
+    },
     // Customer Info
     walkInCustomer: {
-        name: String,
-        phone: String,
-        email: String
+        name: { type: String, required: true },
+        phone: { type: String, required: true },
+        email: { type: String, required: true }
     },
 
     onlineCustomer: {
@@ -17,18 +19,27 @@ const OrderSchema = new Schema({
     // Created By (Receptionist/Admin)
     createdBy: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'User',
+        required:true
     },
 
     // Job Details
-    jobType: String, // e.g., brochure, banner
+    jobType:{
+        type:String,
+        required:true
+    }, // e.g., brochure, banner
+
     specifications: {
-        size: String,
-        quantity: Number,
-        material: String
+        size: { type: String, required: true },
+        quantity: { type: Number, required: true },
+        material: { type: String, required: true }
+
     },
 
-    deadline: Date,
+    deadline:{
+        type:Date,
+        required:true,
+    },
     notes: String,
 
     // Workflow Status
@@ -52,7 +63,8 @@ const OrderSchema = new Schema({
     orderType: {
         type: String,
         enum: ['design', 'design_print', 'design_print_production'],
-        default: 'design'
+        default: 'design',
+        required:true
     },
 
     // Assigned Designer
@@ -64,8 +76,14 @@ const OrderSchema = new Schema({
     // Uploaded design files
     designFiles: [String],
     // Billing Info
-    totalAmount: Number,
-    amountPaid: Number,
+    totalAmount:{
+        type:Number,
+        required:true
+    },
+    amountPaid:{
+        type:Number,
+        required:true
+    },
 
     paymentStatus: {
         type: String,
@@ -99,4 +117,4 @@ const OrderSchema = new Schema({
 
 
 
-export const Order=mongoose.model("Order",OrderSchema)
+export const Order = mongoose.model("Order", OrderSchema)
