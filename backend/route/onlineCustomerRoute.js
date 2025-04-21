@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { onlineSignup, onlineSignin, onlineCustomerProfile } from "../controller/onlineCustomercontroller.js";
-import authenticateToken from "../middleware/authenticateToken.js"; // Import the authenticateToken middleware
+import authenticateToken from "../middleware/authenticateToken.js"; 
 import mongoose from "mongoose";
 
 const onlineCustomerRouter = Router();
