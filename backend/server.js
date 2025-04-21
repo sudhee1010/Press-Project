@@ -4,6 +4,7 @@ import cors from 'cors';
 import cookieParser from "cookie-parser";
 import connectDB from "./config/database.js";
 import onlineCustomerRouter from "./route/onlineCustomerRoute.js";
+import printingUnitRouter from "./route/printingPressunitRoute.js";
 
 dotenv.config();
 const app = express();
@@ -15,5 +16,7 @@ app.use(cookieParser());
 app.use("/api/v1/onlineCustomer", onlineCustomerRouter);
 const PORT = process.env.PORT || 3000;  
 app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
+app.use("/printingUnit",printingUnitRouter );
+
 
 export { app };
