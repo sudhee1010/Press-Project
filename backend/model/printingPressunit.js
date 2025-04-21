@@ -1,0 +1,31 @@
+import mongoose from 'mongoose';
+
+const printingUnitSchema = new mongoose.Schema({
+  // Basic info
+  name: { type: String, required: true },
+  email: { type: String,require:true },
+  phone: { type: String,require:true },
+  whatsapp: { type: String,require:true },
+  address: { type: String,require:true },
+
+  // App status (can be disabled by superadmin if payment is pending)
+  isActive: { type: Boolean, default: true },
+
+  // Billing/subscription info
+  subscription: {
+    isPaid: { type: Boolean, default: false },
+    startDate: { type: Date },
+    nextDueDate: { type: Date },
+    lastPaymentDate: { type: Date },
+    amount: { type: Number }
+  },
+
+  // Optional: settings for future integrations
+  settings: {
+    tokenPrefix: { type: String, default: 'TKN' },
+    notifyViaWhatsApp: { type: Boolean, default: false }
+    
+  }
+}, { timestamps: true });
+
+export const printingPressunit = mongoose.model('PrintingPressunit', printingUnitSchema);

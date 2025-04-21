@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import cors from 'cors';
 import connectDB from "./config/database.js";
 import onlineCustomerRouter from "./route/onlineCustomerRoute.js";
+import printingUnitRouter from "./route/printingPressunitRoute.js";
 
 dotenv.config();
 const app = express();
@@ -14,5 +15,7 @@ app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
 app.use(express.json());
 app.use(cors());
 app.use("/onlineCustomer", onlineCustomerRouter);
+app.use("/printingUnit",printingUnitRouter );
+
 
 export { app };
