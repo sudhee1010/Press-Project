@@ -1,9 +1,17 @@
+// models/token.js
 import mongoose from "mongoose";
-const tokenCounterSchema = new mongoose.Schema({
-    printingUnit: { type: mongoose.Schema.Types.ObjectId, ref: 'PrintingUnit', unique: true },
-    lastTokenNumber: { type: Number, default: 0 }
-  });
-  
-  export const token = mongoose.model('TokenCounter', tokenCounterSchema);
-  
-  
+
+const tokenSchema = new mongoose.Schema({
+  tokenNumber: { type: Number,
+     required: true
+     },
+  customerName: { type: String, required: true }, // or reference onlineCustomer if needed
+  status: {
+    type: String,
+    enum: ["waiting", "in-progress", "completed"],
+    default: "waiting"
+  },
+  createdAt: { type: Date, default: Date.now },
+});
+
+export default mongoose.model("Token", tokenSchema);
