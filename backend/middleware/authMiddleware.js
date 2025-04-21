@@ -28,4 +28,4 @@ const authorizeRoles = (...roles) => {
     };
 };
 
-export { protect, authorizeRoles };
+export default authorizeRoles ;
