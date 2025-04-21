@@ -1,7 +1,7 @@
 import validator from "validator";
 import isEmpty from "./isEmpty.js";
 
-// Password validation regex: at least 1 lowercase, 1 uppercase, 1 special character, 1 number, and minimum 8 characters
+// Password validation regex: at least 1 lowercase, 1 uppercase, 1 special character, 1 number, and minimum 10 characters
 const Regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=]).{10,}$/;
 
 const signupValidation = (data) => {

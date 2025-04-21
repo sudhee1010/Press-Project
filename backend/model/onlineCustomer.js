@@ -39,9 +39,9 @@ const onlineCustomerSchema = new mongoose.Schema({
     }
 }, { timestamps: true });
 
-// Password hashing before saving to the database
+// Hash password before saving
 onlineCustomerSchema.pre('save', async function (next) {
-    if (!this.isModified('password')) return next(); // Only hash if password is modified
+    if (!this.isModified('password')) return next();
     try {
         const salt = await bcrypt.genSalt(10);
         this.password = await bcrypt.hash(this.password, salt);
@@ -51,9 +51,9 @@ onlineCustomerSchema.pre('save', async function (next) {
     }
 });
 
-// Method to compare password (async version)
+// Compare entered password
 onlineCustomerSchema.methods.comparePassword = async function (enteredPassword) {
-    return await bcrypt.compare(enteredPassword, this.password); // Async comparison
+    return await bcrypt.compare(enteredPassword, this.password);
 };
 
-export const onlineCustomer = mongoose.model('OnlineCustomer', onlineCustomerSchema);
+export const OnlineCustomer = mongoose.model('OnlineCustomer', onlineCustomerSchema);
