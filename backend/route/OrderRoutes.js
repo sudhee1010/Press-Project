@@ -3,7 +3,7 @@ import { createOrder, getAllOrders, getOrderById, updateOrder, deleteOrder } fro
 import authenticateToken from "../middleware/authenticateToken.js"
 import authorizeRoles from "../middleware/authMiddleware.js";
 
-const orderRouter = express.Router();  // Correct Router
+const orderRouter = express.Router();
 
 // Create a new order (Receptionist/Admin)
 orderRouter.route("/createOrder").post(authenticateToken, createOrder);
