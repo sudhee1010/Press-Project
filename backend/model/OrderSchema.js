@@ -20,7 +20,7 @@ const OrderSchema = new Schema({
     createdBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        required:true
+        // required:true
     },
 
     // Job Details

@@ -6,7 +6,7 @@ import authorizeRoles from "../middleware/authMiddleware.js";
 const orderRouter = express.Router();  // Correct Router
 
 // Create a new order (Receptionist/Admin)
-orderRouter.route("/createOrder").post(authenticateToken,authorizeRoles('receptionist', 'admin'), createOrder);
+orderRouter.route("/createOrder").post(authenticateToken, createOrder);
 
 // Get all orders (All staff)
 orderRouter.route("/getAllOrders").get(getAllOrders);
