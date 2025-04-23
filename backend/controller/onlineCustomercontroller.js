@@ -112,7 +112,18 @@ const uploadFile = async (req, res) => {
       res.status(500).json({ message: "Upload failed", error: error.message });
     }
   };
+
+  // Logout
+const onlineLogout = (req, res) => {
+    res.clearCookie("token", {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict"
+    });
+    res.status(200).json({ message: "Logout successful" });
+};
+
   
   
 
-export { onlineSignup, onlineSignin, onlineCustomerProfile, uploadFile };
+export { onlineSignup, onlineSignin, onlineCustomerProfile, uploadFile, onlineLogout };

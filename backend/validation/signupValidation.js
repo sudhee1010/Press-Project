@@ -31,7 +31,7 @@ const signupValidation = (data) => {
     if (validator.isEmpty(data.password)) {
         errors.password = "Password is required";
     } else if (!Regex.test(data.password)) {
-        errors.password = "Password should have 1 uppercase, 1 lowercase, 1 special character, 1 number, and at least 8 characters";
+        errors.password = "Password should have 1 uppercase, 1 lowercase, 1 special character, 1 number, and at least 10 characters";
     }
 
     // Phone, whatsapp, and address are optional, but can be validated if needed
