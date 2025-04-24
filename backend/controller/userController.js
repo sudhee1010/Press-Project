@@ -1,6 +1,6 @@
 import asyncHandler from "express-async-handler";
 import User from "../model/userSchema.js";
-// import generateToken from "../utils/generateToken.js";
+import generateToken from "../utils/generateToken.js";
 
 export const registerUser = asyncHandler(async (req, res) => {
   const { name, email, password, role } = req.body;
@@ -10,7 +10,7 @@ export const registerUser = asyncHandler(async (req, res) => {
     return res.status(400).json({ message: "User already exists" });
 
   const user = await User.create({ name, email, password, role });
-  // generateToken(res, user._id);
+  generateToken(res, user._id);
   res.status(201).json({
     _id: user._id,
     name: user.name,
@@ -23,8 +23,8 @@ export const loginUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
 
-  if (user && (await user.matchPassword(password))) {
-    // generateToken(res, user._id);
+  if (user && (await user.comparePassword(password))) {
+    generateToken(res, user._id);
     res.status(200).json({
       _id: user._id,
       name: user.name,
