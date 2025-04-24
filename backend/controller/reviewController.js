@@ -1,5 +1,5 @@
 import { Review } from '../model/reviewSchema.js';
-import { PrintingPressUnit } from '../model/printingPressunit.js';
+import { printingPressunit } from '../model/printingPressunit.js';
 
 const addReview = async (req, res) => {
   try {
@@ -14,7 +14,7 @@ const addReview = async (req, res) => {
     });
 
     // Optional: push review to printing unit
-    await PrintingPressUnit.findByIdAndUpdate(printingUnitId, {
+    await printingPressunit.findByIdAndUpdate(printingUnitId, {
       $push: { reviews: newReview._id }
     });
 
