@@ -19,6 +19,7 @@ const printingUnitSchema = new mongoose.Schema({
     lastPaymentDate: { type: Date },
     amount: { type: Number }
   },
+  reviews: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Review' }],
 
   // Optional: settings for future integrations
   settings: {

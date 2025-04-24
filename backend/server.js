@@ -8,6 +8,7 @@ import printingUnitRouter from "./route/printingPressunitRoute.js";
 import orderRouter from "./route/OrderRoutes.js";
 import tokenRouter from "./route/tokenRoutes.js";
 import userRoutes from "./route/userRoutes.js"
+import reviewRouter from "./route/reviewRoute.js";
 
 dotenv.config();
 const app = express();
@@ -23,6 +24,8 @@ app.use("/api/v1/order", orderRouter);
 app.use("/api/v1/printingUnit", printingUnitRouter);
 app.use("/api/v1/tokenRouter", tokenRouter);
 app.use("/api/v1/users",userRoutes)
+app.use("/api/v1/review",reviewRouter)
+
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
