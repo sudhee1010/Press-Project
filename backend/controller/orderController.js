@@ -3,7 +3,12 @@ import { Order } from '../model/OrderSchema.js';
 // Create a new Order
 const createOrder = async (req, res) => {
     try {
-        const order = await Order.create(req.body);
+        const { shopId, ...orderData } = req.body;
+
+        const order = await Order.create({
+          ...orderData,
+          printingPressunit: shopId,  
+        });
         res.status(201).json(order);
     } catch (error) {
         res.status(400).json({ message: error.message });
@@ -13,6 +18,11 @@ const createOrder = async (req, res) => {
 // Get All Orders
 const getAllOrders = async (req, res) => {
     try {
+        const { shopId } = req.query; 
+
+        if (!shopId) {
+          return res.status(400).json({ message: 'shopId is required' });
+        }
         const orders = await Order.find()
             .populate('onlineCustomer createdBy assignedDesigner printingUnit');
         res.status(200).json(orders);

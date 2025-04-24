@@ -2,6 +2,7 @@ import { OnlineCustomer } from "../model/onlineCustomer.js";
 import signinValidation from "../validation/signinValidation.js";
 import signupValidation from "../validation/signupValidation.js";
 import jwt from "jsonwebtoken";
+import generateToken from "../utils/generateToken.js";
 
 // Sign up
 const onlineSignup = async (req, res) => {
@@ -27,6 +28,7 @@ const onlineSignup = async (req, res) => {
             whatsapp,
             address
         });
+        generateToken(res,result._id)
 
         res.status(200).json({ message: "Signup successful", data: result });
     } catch (error) {
@@ -55,20 +57,22 @@ const onlineSignin = async (req, res) => {
             errors.password = "Wrong password";
             return res.status(400).json(errors);
         }
+        generateToken(res,customer._id)
 
-        const token = jwt.sign(
-            { _id: customer._id },
-            process.env.JWT_SECRET || "default_secret",
-            { expiresIn: "8h" }
-        );
+        // const token = jwt.sign(
+        //     { _id: customer._id },
+        //     process.env.JWT_SECRET || "default_secret",
+        //     { expiresIn: "8h" }
+        // );
 
-        // Set cookie
-        res.cookie("token", token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: "strict",
-            maxAge: 8 * 60 * 60 * 1000 // 8 hours
-        }).status(200).json({ message: "Login successful" });
+        // // Set cookie
+        // res.cookie("token", token, {
+        //     httpOnly: true,
+        //     secure: process.env.NODE_ENV === "production",
+        //     sameSite: "strict",
+        //     maxAge: 8 * 60 * 60 * 1000 // 8 hours
+        // })
+        res.status(200).json({ message: "Login successful" });
     } catch (error) {
         res.status(500).json({ message: "Error occurred during login", data: error.message });
     }
@@ -112,7 +116,18 @@ const uploadFile = async (req, res) => {
       res.status(500).json({ message: "Upload failed", error: error.message });
     }
   };
+
+  // Logout
+const onlineLogout = (req, res) => {
+    res.clearCookie("token", {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict"
+    });
+    res.status(200).json({ message: "Logout successful" });
+};
+
   
   
 
-export { onlineSignup, onlineSignin, onlineCustomerProfile, uploadFile };
+export { onlineSignup, onlineSignin, onlineCustomerProfile, uploadFile, onlineLogout };
