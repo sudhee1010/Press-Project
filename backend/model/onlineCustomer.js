@@ -29,9 +29,14 @@ const onlineCustomerSchema = new mongoose.Schema({
     address: {
         type: String
     },
+    shop: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "PrintingPressunit",
+        required: true
+      },
     printingUnit: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'PrintingUnit'
+        ref: 'PrintingPressUnit'
     },
     isActive: {
         type: Boolean,
