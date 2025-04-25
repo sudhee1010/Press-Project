@@ -113,12 +113,7 @@ const OrderSchema = new Schema({
 
     deliveryDate: Date,
 
-    shop: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'printingPressunit',
-        required: true
-    }
-
+   
 }, { timestamps: true });
 
 
