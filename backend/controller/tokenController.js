@@ -1,21 +1,22 @@
 import Token from "../model/tokenSchema.js";
 
-// Create a token and assign to a customer
 const generateToken = async (req, res) => {
-  const { customerName } = req.body;
+  const { shopId, orderId, customerName } = req.body;
 
   try {
-    if (!customerName) {
-      return res.status(400).json({ message: "Customer name is required" });
+    if (!shopId) {
+      return res.status(400).json({ message: "Shop ID is required" });
     }
 
-    // Get last token number
     const lastToken = await Token.findOne().sort({ tokenNumber: -1 });
     const nextTokenNumber = lastToken ? lastToken.tokenNumber + 1 : 1;
 
     const newToken = await Token.create({
       tokenNumber: nextTokenNumber,
-      customerName,
+      shopId,
+      orderId,
+      customerName, // optional now
+      issuedAt: new Date()
     });
 
     return res.status(200).json({
@@ -32,5 +33,5 @@ const generateToken = async (req, res) => {
     });
   }
 };
- 
-export { generateToken }
+
+export { generateToken };
