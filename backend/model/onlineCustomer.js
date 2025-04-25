@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
-import { type } from 'os';
 
 const onlineCustomerSchema = new mongoose.Schema({
     name: {
@@ -32,21 +31,25 @@ const onlineCustomerSchema = new mongoose.Schema({
     address: {
         type: String
     },
-    shop: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "PrintingPressunit",
-        required: true
-    },
-    printingUnit: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'PrintingPressUnit'
-    },
+    // shopId: {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: "PrintingPressunit",
+    //     required: true
+    // },
+    // printingUnit: {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: 'PrintingPressUnit'
+    // },
+    // orders:{
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: "Order"
+    // },
     isActive: {
         type: Boolean,
         default: true
     },
     uploads: {
-        type: [String], // array of file paths
+        type: [String],
         default: [],
     }
 }, { timestamps: true });

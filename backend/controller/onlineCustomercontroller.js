@@ -3,10 +3,11 @@ import signinValidation from "../validation/signinValidation.js";
 import signupValidation from "../validation/signupValidation.js";
 import jwt from "jsonwebtoken";
 import generateToken from "../utils/generateToken.js";
+import { Order } from "../model/OrderSchema.js";
 
 // Sign up
 const onlineSignup = async (req, res) => {
-    const { name, email, password, phone, whatsapp, address, shop } = req.body;
+    const { name, email, password, phone, whatsapp, address } = req.body;
     const { errors, isValid } = signupValidation(req.body);
 
     try {
@@ -26,14 +27,16 @@ const onlineSignup = async (req, res) => {
             password, // model handles hashing
             phone,
             whatsapp,
-            address,
-            shop
+            address
         });
         // Remove password from result
         const customerData = result.toObject();
         delete customerData.password;
-        generateToken(res, result._id)
 
+        const payload = {
+            userId: result._id
+          };
+        generateToken(res, payload);
         res.status(200).json({ message: "Signup successful", data: customerData });
     } catch (error) {
         res.status(500).json({ message: "Error occurred during sign up", data: error.message });
@@ -271,6 +274,24 @@ const changeOnlineCustomerPassword = async (req, res) => {
     }
 };
 
+//for getting online customers order
+const getOnlineCustomerOrders = async (req, res) => {
+    try {
+        const orders = await Order.find({ onlineCustomer: req.user.userId })
+            // .populate('printingUnit') // optional, add other refs if needed
+            .sort({ createdAt: -1 }); // newest first
+
+        if (!orders.length) {
+            return res.status(404).json({ message: "No orders found for this customer" });
+        }
+
+        res.status(200).json({ data: orders });
+    } catch (error) {
+        res.status(500).json({ message: "Failed to fetch orders", error: error.message });
+    }
+};
 
 
-export { onlineSignup, onlineSignin, onlineCustomerProfile, uploadFile, onlineLogout, getCustomersByShop, updateOnlineCustomer, getAllOnlineCustomers, deleteCustomer, changeOnlineCustomerPassword };
+
+
+export { onlineSignup, onlineSignin, onlineCustomerProfile, uploadFile, onlineLogout, getCustomersByShop, updateOnlineCustomer, getAllOnlineCustomers, deleteCustomer, changeOnlineCustomerPassword ,getOnlineCustomerOrders};
