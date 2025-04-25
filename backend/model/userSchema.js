@@ -18,8 +18,13 @@ const userSchema = new mongoose.Schema(
       required: true,
     },
     role: {
-      type: [String],
-      enum: ["superadmin", "admin", "designer", "printing"],
+      type: String,
+      enum: ["superadmin", "admin", "designer", "printing", "production"],
+      default: "admin",
+    },
+    shopId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "printingPressunit",
     },
   },
   { timestamps: true }
