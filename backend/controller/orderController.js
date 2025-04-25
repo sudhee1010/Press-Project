@@ -27,7 +27,7 @@ const getAllOrders = async (req, res) => {
         if (!shopId) {
           return res.status(400).json({ message: 'shopId is required' });
         }
-        const orders = await Order.find()
+        const orders = await Order.find({shopId: shopId})
             .populate('onlineCustomer createdBy assignedDesigner printingUnit');
         res.status(200).json(orders);
     } catch (error) {
