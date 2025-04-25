@@ -20,7 +20,7 @@ const OrderSchema = new Schema({
     createdBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        required:true
+        // required:true
     },
 
     // Job Details
@@ -94,7 +94,7 @@ const OrderSchema = new Schema({
     // Printing Info
     printingUnit: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'PrintingUnit'
+        ref: 'printingPressunit'
     },
 
     // Production Info
@@ -111,6 +111,12 @@ const OrderSchema = new Schema({
     },
 
     deliveryDate: Date,
+
+    shop: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'printingPressunit',
+        required: true
+    }
 
 }, { timestamps: true });
 
