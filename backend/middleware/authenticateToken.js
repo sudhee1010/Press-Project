@@ -15,6 +15,7 @@ const authenticateToken = (req, res, next) => {
       token,
       process.env.JWT_SECRET || "default_secret"
     );
+    console.log(decoded);
     req.user = decoded;
     next();
   } catch (error) {
