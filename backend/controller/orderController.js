@@ -11,7 +11,7 @@ const createOrder = async (req, res) => {
 
         const order = await Order.create({
           ...req.body,
-          shopId: shopId,  
+          Shopid: shopId,  
         });
         res.status(201).json(order);
     } catch (error) {
