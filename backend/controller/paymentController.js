@@ -1,6 +1,6 @@
 import Razorpay from 'razorpay';
 import dotenv from 'dotenv';
-import Payment from '../models/PaymentSchema.js';
+import Payment from '../model/paymentSchema.js';
 
 dotenv.config();
 
