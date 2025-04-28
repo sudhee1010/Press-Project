@@ -3,10 +3,11 @@ import signinValidation from "../validation/signinValidation.js";
 import signupValidation from "../validation/signupValidation.js";
 import jwt from "jsonwebtoken";
 import generateToken from "../utils/generateToken.js";
+import { Order } from "../model/OrderSchema.js";
 
 // Sign up
 const onlineSignup = async (req, res) => {
-    const { name, email, password, phone, whatsapp, address, shop } = req.body;
+    const { name, email, password, phone, whatsapp, address } = req.body;
     const { errors, isValid } = signupValidation(req.body);
 
     try {
@@ -26,14 +27,16 @@ const onlineSignup = async (req, res) => {
             password, // model handles hashing
             phone,
             whatsapp,
-            address,
-            shop
+            address
         });
         // Remove password from result
         const customerData = result.toObject();
         delete customerData.password;
-        generateToken(res, result._id)
 
+        const payload = {
+            userId: result._id
+          };
+        generateToken(res, payload);
         res.status(200).json({ message: "Signup successful", data: customerData });
     } catch (error) {
         res.status(500).json({ message: "Error occurred during sign up", data: error.message });
@@ -87,7 +90,7 @@ const onlineCustomerProfile = async (req, res) => {
     const { id } = req.params;
 
     try {
-        if (req.user._id !== id) {
+        if (req.user.userId !== id) {
             return res.status(403).json({ message: "You can only access your own profile" });
         }
 
@@ -103,27 +106,80 @@ const onlineCustomerProfile = async (req, res) => {
 };
 
 //for file uploading
+// const uploadFile = async (req, res) => {
+//     try {
+//         if (!req.file) {
+//             return res.status(400).json({ message: "No file uploaded" });
+//         }
+
+//         res.status(200).json({
+//             message: "File uploaded successfully",
+//             file: {
+//                 filename: req.file.filename,
+//                 path: req.file.path,
+//             },
+//         });
+//     } catch (error) {
+//         res.status(500).json({ message: "Upload failed", error: error.message });
+//     }
+// };
+
+// const uploadFile = async (req, res) => {
+//     const { id } = req.params
+//     const { files } = req.body
+//     try {
+//         const customer = await OnlineCustomer.findById(id)
+//         if (!customer) {
+//             return res.status(400).json({
+//                 message: "user not found"
+//             })
+//         }
+//         if (req.files && req.files.length > 0) {
+//             customer.upload = req.files.map(file => file.path)
+//         }
+//         await customer.save()
+//         return res.status(200).json({
+//             message: "succesfully uploaded"
+//         })
+//     }
+//     catch (error) {
+//         res.status(405).json({
+//             message: "error", data: error.message
+//         })
+//     }
+// }
+
+
 const uploadFile = async (req, res) => {
+    const { id } = req.params;
     try {
-        if (!req.file) {
-            return res.status(400).json({ message: "No file uploaded" });
+        if (req.user.userId !== id) {
+            return res.status(403).json({ message: "You can post only on your profile" });
+        }
+        const customer = await OnlineCustomer.findById(id);
+        if (!customer) {
+            return res.status(404).json({ message: "Customer not found" });
         }
 
-        res.status(200).json({
-            message: "File uploaded successfully",
-            file: {
-                filename: req.file.filename,
-                path: req.file.path,
-            },
+        if (req.files && req.files.length > 0) {
+            // Save file paths to the customer
+            customer.uploads = req.files.map(file => file.path);
+            await customer.save();
+        }
+
+        return res.status(200).json({
+            message: "Files uploaded successfully",
+            files: customer.uploads
         });
     } catch (error) {
         res.status(500).json({ message: "Upload failed", error: error.message });
     }
 };
 
+
 // Logout
 const onlineLogout = (req, res) => {
-    res.clearCookie("token", {
+    res.clearCookie("jwt", {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "strict"
@@ -176,7 +232,8 @@ const getAllOnlineCustomers = async (req, res) => {
 //for deleting customer
 const deleteCustomer = async (req, res) => {
     try {
-        await OnlineCustomer.findByIdAndUpdate(req.params.id, { isDeleted: true, isActive: false });
+        // console.log(req.user.userId,"req")
+        await OnlineCustomer.findByIdAndDelete(req.user.userId, { isDeleted: true, isActive: false });
         res.status(200).json({ message: "Customer deleted" });
     } catch (error) {
         res.status(500).json({ message: "Delete failed", error: error.message });
@@ -186,13 +243,17 @@ const deleteCustomer = async (req, res) => {
 //for changing password
 const changeOnlineCustomerPassword = async (req, res) => {
     const { oldPassword, newPassword } = req.body;
+    //     console.log("old",oldPassword)
+    // console.log("hoi")    
+    // const {id}=req.params
+    // console.log(id,"id")
 
     if (!oldPassword || !newPassword) {
         return res.status(400).json({ message: "Both old and new passwords are required" });
     }
 
     try {
-        const customer = await OnlineCustomer.findById(req.user._id);
+        const customer = await OnlineCustomer.findById(req.user.userId);
 
         if (!customer) {
             return res.status(404).json({ message: "Customer not found" });
@@ -213,6 +274,24 @@ const changeOnlineCustomerPassword = async (req, res) => {
     }
 };
 
+//for getting online customers order
+const getOnlineCustomerOrders = async (req, res) => {
+    try {
+        const orders = await Order.find({ onlineCustomer: req.user.userId })
+            // .populate('printingUnit') // optional, add other refs if needed
+            .sort({ createdAt: -1 }); // newest first
+
+        if (!orders.length) {
+            return res.status(404).json({ message: "No orders found for this customer" });
+        }
+
+        res.status(200).json({ data: orders });
+    } catch (error) {
+        res.status(500).json({ message: "Failed to fetch orders", error: error.message });
+    }
+};
 
 
-export { onlineSignup, onlineSignin, onlineCustomerProfile, uploadFile, onlineLogout, getCustomersByShop, updateOnlineCustomer, getAllOnlineCustomers, deleteCustomer,changeOnlineCustomerPassword };
+
+
+export { onlineSignup, onlineSignin, onlineCustomerProfile, uploadFile, onlineLogout, getCustomersByShop, updateOnlineCustomer, getAllOnlineCustomers, deleteCustomer, changeOnlineCustomerPassword ,getOnlineCustomerOrders};
