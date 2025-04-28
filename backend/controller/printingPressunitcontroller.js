@@ -1,13 +1,38 @@
-
+import bcrypt from 'bcryptjs';
 import { printingPressunit } from "../model/printingPressunit.js";
 
 // Create a new printing unit 
+// const createPrintingUnit = async (req, res) => {
+//     try {
+//         const unit = await printingPressunit.create(req.body);
+//         res.status(201).json({ data: unit, message: 'Printing unit created successfully' });
+//     }
+//     catch (err) {
+//         res.status(400).json({ error: err.message });
+//     }
+// };
+
+
+
 const createPrintingUnit = async (req, res) => {
     try {
-        const unit = await printingPressunit.create(req.body);
-        res.status(201).json({ data: unit, message: 'Printing unit created successfully' });
-    }
-    catch (err) {
+        const { name,email,password,phone, whatsapp,address,role } = req.body;
+
+        // Hash the password
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // Create the unit with the hashed password
+        const unit = await printingPressunit.create({
+            name,email,phone, whatsapp,address,role,
+            password: hashedPassword
+        });
+
+        // Convert Mongoose doc to plain object to delete password
+        const unitObject = unit.toObject();
+        delete unitObject.password;
+
+        res.status(201).json({ data: unitObject, message: 'Printing unit created successfully' });
+    } catch (err) {
         res.status(400).json({ error: err.message });
     }
 };

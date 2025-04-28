@@ -3,7 +3,7 @@ import { createPrintingUnit, getAllUnits,getUnitById,updateUnit,deleteUnit} from
 import authorizeRoles from "../middleware/authMiddleware.js";
 
 const printingUnitRouter = Router();
-printingUnitRouter.route("/createPrintingUnit").post(authorizeRoles("admin","superadmin"),createPrintingUnit);
+printingUnitRouter.route("/createPrintingUnit").post(createPrintingUnit);
 printingUnitRouter.route("/getallunits").get(authorizeRoles("superadmin"),getAllUnits);
 printingUnitRouter.route("/getunitbyid/:id").get(authorizeRoles("superadmin"),getUnitById);
 printingUnitRouter.route("/updateunit/:id").put(authorizeRoles("admin","superadmin"),updateUnit);
