@@ -4,9 +4,12 @@ const printingUnitSchema = new mongoose.Schema({
   // Basic info
   name: { type: String, required: true },
   email: { type: String,require:true },
+  password:{type: String,require:true},
   phone: { type: String,require:true },
   whatsapp: { type: String,require:true },
   address: { type: String,require:true },
+  role:{type:String,default:'admin'},
+  
 
   // App status (can be disabled by superadmin if payment is pending)
   isActive: { type: Boolean, default: true },
