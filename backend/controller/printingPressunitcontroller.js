@@ -21,7 +21,7 @@ const createPrintingUnit = async (req, res) => {
         const unitObject = unit.toObject();
         delete unitObject.password;
         const payload= {
-            userId:unit._id,
+            shopId:unit._id,
             role:unit.role
         }
         generateToken(res,payload)
