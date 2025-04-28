@@ -64,7 +64,10 @@ const onlineSignin = async (req, res) => {
             errors.password = "Wrong password";
             return res.status(400).json(errors);
         }
-        generateToken(res, customer._id)
+        const payload = {
+            userId: customer._id
+          };
+        generateToken(res,payload)
 
         // const token = jwt.sign(
         //     { _id: customer._id },
@@ -85,25 +88,37 @@ const onlineSignin = async (req, res) => {
     }
 };
 
-// Get customer profile
+// Get  customer profile
 const onlineCustomerProfile = async (req, res) => {
     const { id } = req.params;
 
     try {
-        if (req.user.userId !== id) {
-            return res.status(403).json({ message: "You can only access your own profile" });
-        }
-
         const customer = await OnlineCustomer.findById(id).select("-password");
+        if (!customer) {
+            return res.status(404).json({ message: "Customer not found" });
+        }
+        res.status(200).json({ data: customer });
+    } catch (error) {
+        res.status(500).json({ message: "Error occurred while fetching profile", data: error.message });
+    }
+};
+
+
+//for viewing profile by customer itself
+const getOnlineCustomerProfile = async (req, res) => {
+    try {
+        const customer = await OnlineCustomer.findById(req.user.userId).select("-password");
+
         if (!customer) {
             return res.status(404).json({ message: "Customer not found" });
         }
 
         res.status(200).json({ data: customer });
     } catch (error) {
-        res.status(500).json({ message: "Error occurred while fetching profile", data: error.message });
+        res.status(500).json({ message: "Error fetching profile", error: error.message });
     }
 };
+
 
 //for file uploading
 // const uploadFile = async (req, res) => {
@@ -294,4 +309,4 @@ const getOnlineCustomerOrders = async (req, res) => {
 
 
 
-export { onlineSignup, onlineSignin, onlineCustomerProfile, uploadFile, onlineLogout, getCustomersByShop, updateOnlineCustomer, getAllOnlineCustomers, deleteCustomer, changeOnlineCustomerPassword ,getOnlineCustomerOrders};
+export { onlineSignup, onlineSignin, onlineCustomerProfile, uploadFile, onlineLogout, getCustomersByShop, updateOnlineCustomer, getAllOnlineCustomers, deleteCustomer, changeOnlineCustomerPassword ,getOnlineCustomerOrders,getOnlineCustomerProfile};
