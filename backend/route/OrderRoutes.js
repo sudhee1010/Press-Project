@@ -9,13 +9,13 @@ const orderRouter = express.Router();
 orderRouter.route("/createOrder").post(authenticateToken, createOrder);
 
 // Get all orders (All staff)
-orderRouter.route("/getAllOrders").get(getAllOrders);
+orderRouter.route("/getAllOrders").get(authorizeRoles('admin','superadmin'),getAllOrders);
 
 // Get a single order by ID
-orderRouter.route("/getOrderById/:id").get(getOrderById);
+orderRouter.route("/getOrderById/:id").get(authorizeRoles('designer','admin'),getOrderById);
 
 // Update an order
-orderRouter.route("/updateOrder/:id").put(authenticateToken,authorizeRoles('designer', 'admin', 'printing_staff', 'production_staff'), updateOrder);
+orderRouter.route("/updateOrder/:id").put(authenticateToken,authorizeRoles('designer', 'admin', 'printing', 'production'), updateOrder);
 
 // Delete an order
 orderRouter.route("/deleteOrder/:id").delete(authenticateToken,authorizeRoles('admin'), deleteOrder);

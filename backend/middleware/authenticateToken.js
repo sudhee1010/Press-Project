@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 
 const authenticateToken = (req, res, next) => {
   const token = req.cookies.jwt; // Get token from HttpOnly cookie
-  console.log(token);
+//   console.log(token);
 
   if (!token) {
     return res
@@ -15,6 +15,7 @@ const authenticateToken = (req, res, next) => {
       token,
       process.env.JWT_SECRET || "default_secret"
     );
+    console.log(decoded);
     req.user = decoded;
     next();
   } catch (error) {
