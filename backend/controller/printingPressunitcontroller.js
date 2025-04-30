@@ -134,8 +134,30 @@ const signin = async (req, res) => {
         })
     }
 }
+//verification
+const verifyPrintingUnit = async (req, res) => {
+    try {
+      const unit = await printingPressunit.findById(req.params.id);
+      if (!unit) {
+        return res.status(404).json({ message: 'Printing unit not found' });
+      }
+  
+      unit.verified = true;
+      await unit.save();
+
+      const payload = {
+        shopId: unit._id,
+        role: unit.role  
+      };
+      generateToken(res, payload);
+  
+      res.status(200).json({ message: 'Printing unit verified successfully', data: unit });
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  };
+  
 
 
 
-
-export { createPrintingUnit, getAllUnits, getUnitById ,updateUnit,deleteUnit,signin};
+export { createPrintingUnit, getAllUnits, getUnitById ,updateUnit,deleteUnit,signin,verifyPrintingUnit};

@@ -29,6 +29,12 @@ const printingUnitSchema = new mongoose.Schema({
     tokenPrefix: { type: String, default: 'TKN' },
     notifyViaWhatsApp: { type: Boolean, default: false }
     
+  },
+
+  // verification by superadmin
+  verified: {
+    type: Boolean,
+    default: false
   }
 }, { timestamps: true });
 
