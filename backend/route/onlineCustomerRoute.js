@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { onlineSignup, onlineSignin, onlineCustomerProfile, uploadFile, onlineLogout,getCustomersByShop, updateOnlineCustomer, getAllOnlineCustomers, deleteCustomer, changeOnlineCustomerPassword,getOnlineCustomerOrders } from "../controller/onlineCustomercontroller.js";
+import { onlineSignup, onlineSignin, onlineCustomerProfile, uploadFile, onlineLogout,getCustomersByShop, updateOnlineCustomer, getAllOnlineCustomers, deleteCustomer, changeOnlineCustomerPassword,getOnlineCustomerOrders, getOnlineCustomerProfile } from "../controller/onlineCustomercontroller.js";
 import authenticateToken from "../middleware/authenticateToken.js";
 // import mongoose from "mongoose";
 import upload from "../file-upload/onlineCustomerFileUpload.js";
@@ -18,6 +18,8 @@ onlineCustomerRouter.route("/getAllOnlineCustomers").get(authenticateToken,getAl
 onlineCustomerRouter.route("/deleteCustomer/:id").delete(authenticateToken,validateObjectId,deleteCustomer);
 onlineCustomerRouter.route("/changeOnlineCustomerPassword/:id").put(authenticateToken,validateObjectId,changeOnlineCustomerPassword);
 onlineCustomerRouter.route("/getOnlineCustomerOrders").get(authenticateToken,validateObjectId,getOnlineCustomerOrders);
+onlineCustomerRouter.route("/getOnlineCustomerProfile").get(authenticateToken,getOnlineCustomerProfile);
+
 
 
 
