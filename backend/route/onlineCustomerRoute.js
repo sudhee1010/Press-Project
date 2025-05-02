@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { onlineSignup, onlineSignin, onlineCustomerProfile, uploadFile, onlineLogout,getCustomersByShop, updateOnlineCustomer, getAllOnlineCustomers, deleteCustomer, changeOnlineCustomerPassword,getOnlineCustomerOrders, getOnlineCustomerProfile } from "../controller/onlineCustomercontroller.js";
+import { onlineSignup, onlineSignin, onlineCustomerProfile, uploadFile, onlineLogout,getCustomersByShop, updateOnlineCustomer, getAllOnlineCustomers, deleteCustomer, changeOnlineCustomerPassword,getOnlineCustomerOrders, getOnlineCustomerProfile, requestPasswordReset, resetPassword } from "../controller/onlineCustomercontroller.js";
 import authenticateToken from "../middleware/authenticateToken.js";
 // import mongoose from "mongoose";
 import upload from "../file-upload/onlineCustomerFileUpload.js";
@@ -19,6 +19,10 @@ onlineCustomerRouter.route("/deleteCustomer/:id").delete(authenticateToken,valid
 onlineCustomerRouter.route("/changeOnlineCustomerPassword/:id").put(authenticateToken,validateObjectId,changeOnlineCustomerPassword);
 onlineCustomerRouter.route("/getOnlineCustomerOrders").get(authenticateToken,validateObjectId,getOnlineCustomerOrders);
 onlineCustomerRouter.route("/getOnlineCustomerProfile").get(authenticateToken,getOnlineCustomerProfile);
+onlineCustomerRouter.route("/forgot-password").post(authenticateToken,validateObjectId,requestPasswordReset);
+onlineCustomerRouter.route("/reset-password/:token").post(authenticateToken,validateObjectId,resetPassword);
+
+
 
 
 

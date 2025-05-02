@@ -51,7 +51,14 @@ const onlineCustomerSchema = new mongoose.Schema({
     uploads: {
         type: [String],
         default: [],
+    },
+    resetPasswordToken: {
+        type: String
+    },
+    resetPasswordExpires: {
+        type: Date
     }
+    
 }, { timestamps: true });
 
 // Hash password before saving
