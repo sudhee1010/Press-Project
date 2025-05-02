@@ -115,7 +115,7 @@ const signin = async (req, res) => {
             return res.status(400).json(errors)
         }
         const payload={
-            userId:customer._id
+            shopId:customer._id
         }
         generateToken(res,payload)
         // const token = jwt.sign(
