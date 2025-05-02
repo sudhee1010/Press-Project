@@ -1,9 +1,12 @@
 import { OnlineCustomer } from "../model/onlineCustomer.js";
 import signinValidation from "../validation/signinValidation.js";
 import signupValidation from "../validation/signupValidation.js";
-import jwt from "jsonwebtoken";
+// import jwt from "jsonwebtoken";
 import generateToken from "../utils/generateToken.js";
 import { Order } from "../model/OrderSchema.js";
+import crypto from 'crypto';
+import nodemailer from 'nodemailer';
+// import generateResetToken from "../utils/generateResetToken.js";
 
 // Sign up
 const onlineSignup = async (req, res) => {
@@ -35,7 +38,7 @@ const onlineSignup = async (req, res) => {
 
         const payload = {
             userId: result._id
-          };
+        };
         generateToken(res, payload);
         res.status(200).json({ message: "Signup successful", data: customerData });
     } catch (error) {
@@ -66,22 +69,8 @@ const onlineSignin = async (req, res) => {
         }
         const payload = {
             userId: customer._id
-          };
-        generateToken(res,payload)
-
-        // const token = jwt.sign(
-        //     { _id: customer._id },
-        //     process.env.JWT_SECRET || "default_secret",
-        //     { expiresIn: "8h" }
-        // );
-
-        // // Set cookie
-        // res.cookie("token", token, {
-        //     httpOnly: true,
-        //     secure: process.env.NODE_ENV === "production",
-        //     sameSite: "strict",
-        //     maxAge: 8 * 60 * 60 * 1000 // 8 hours
-        // })
+        };
+        generateToken(res, payload)
         res.status(200).json({ message: "Login successful", data: customer });
     } catch (error) {
         res.status(500).json({ message: "Error occurred during login", data: error.message });
@@ -121,50 +110,6 @@ const getOnlineCustomerProfile = async (req, res) => {
 
 
 //for file uploading
-// const uploadFile = async (req, res) => {
-//     try {
-//         if (!req.file) {
-//             return res.status(400).json({ message: "No file uploaded" });
-//         }
-
-//         res.status(200).json({
-//             message: "File uploaded successfully",
-//             file: {
-//                 filename: req.file.filename,
-//                 path: req.file.path,
-//             },
-//         });
-//     } catch (error) {
-//         res.status(500).json({ message: "Upload failed", error: error.message });
-//     }
-// };
-
-// const uploadFile = async (req, res) => {
-//     const { id } = req.params
-//     const { files } = req.body
-//     try {
-//         const customer = await OnlineCustomer.findById(id)
-//         if (!customer) {
-//             return res.status(400).json({
-//                 message: "user not found"
-//             })
-//         }
-//         if (req.files && req.files.length > 0) {
-//             customer.upload = req.files.map(file => file.path)
-//         }
-//         await customer.save()
-//         return res.status(200).json({
-//             message: "succesfully uploaded"
-//         })
-//     }
-//     catch (error) {
-//         res.status(405).json({
-//             message: "error", data: error.message
-//         })
-//     }
-// }
-
-
 const uploadFile = async (req, res) => {
     const { id } = req.params;
     try {
@@ -258,15 +203,9 @@ const deleteCustomer = async (req, res) => {
 //for changing password
 const changeOnlineCustomerPassword = async (req, res) => {
     const { oldPassword, newPassword } = req.body;
-    //     console.log("old",oldPassword)
-    // console.log("hoi")    
-    // const {id}=req.params
-    // console.log(id,"id")
-
     if (!oldPassword || !newPassword) {
         return res.status(400).json({ message: "Both old and new passwords are required" });
     }
-
     try {
         const customer = await OnlineCustomer.findById(req.user.userId);
 
@@ -293,7 +232,6 @@ const changeOnlineCustomerPassword = async (req, res) => {
 const getOnlineCustomerOrders = async (req, res) => {
     try {
         const orders = await Order.find({ onlineCustomer: req.user.userId })
-            // .populate('printingUnit') // optional, add other refs if needed
             .sort({ createdAt: -1 }); // newest first
 
         if (!orders.length) {
@@ -306,7 +244,68 @@ const getOnlineCustomerOrders = async (req, res) => {
     }
 };
 
+//for req pass reset
+const requestPasswordReset = async (req, res) => {
+    const { email } = req.body;
+    try {
+        const user = await OnlineCustomer.findOne({ email });
+        if (!user) return res.status(404).json({ message: "No user with this email" });
+
+        const resetToken = crypto.randomBytes(32).toString("hex");
+        const hashedToken = crypto.createHash("sha256").update(resetToken).digest("hex");
+
+        user.resetPasswordToken = hashedToken;
+        user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
+        await user.save();
+
+        const resetUrl = `http://localhost:3000/reset-password/${resetToken}`; // frontend link
+
+        const transporter = nodemailer.createTransport({
+            service: "Gmail",
+            auth: {
+                user: process.env.EMAIL_USER,
+                pass: process.env.EMAIL_PASS
+            }
+        });
+
+        await transporter.sendMail({
+            to: user.email,
+            subject: "Password Reset Request",
+            html: `<p>You requested a password reset</p><p><a href="${resetUrl}">Click here</a> to reset your password</p>`
+        });
+
+        res.status(200).json({ message: "Reset link sent to email" });
+    } catch (err) {
+        res.status(500).json({ message: "Error sending reset email", error: err.message });
+    }
+};
+
+//for reset password
+const resetPassword = async (req, res) => {
+    const { token } = req.params;
+    const { newPassword } = req.body;
+
+    const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
+
+    try {
+        const user = await OnlineCustomer.findOne({
+            resetPasswordToken: hashedToken,
+            resetPasswordExpires: { $gt: Date.now() }
+        });
+
+        if (!user) return res.status(400).json({ message: "Invalid or expired token" });
+
+        user.password = newPassword;
+        user.resetPasswordToken = undefined;
+        user.resetPasswordExpires = undefined;
+        await user.save();
+
+        res.status(200).json({ message: "Password reset successful" });
+    } catch (err) {
+        res.status(500).json({ message: "Password reset failed", error: err.message });
+    }
+};
 
 
 
-export { onlineSignup, onlineSignin, onlineCustomerProfile, uploadFile, onlineLogout, getCustomersByShop, updateOnlineCustomer, getAllOnlineCustomers, deleteCustomer, changeOnlineCustomerPassword ,getOnlineCustomerOrders,getOnlineCustomerProfile};
+export { onlineSignup, onlineSignin, onlineCustomerProfile, uploadFile, onlineLogout, getCustomersByShop, updateOnlineCustomer, getAllOnlineCustomers, deleteCustomer, changeOnlineCustomerPassword, getOnlineCustomerOrders, getOnlineCustomerProfile,requestPasswordReset,resetPassword };
