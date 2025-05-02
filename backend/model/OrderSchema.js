@@ -1,7 +1,7 @@
 import mongoose, { Schema } from "mongoose"
 const OrderSchema = new Schema({
     tokenNumber: {
-        type: String, // Unique token given to the customer
+        type: String, 
         required: true
     },
     // Customer Info
@@ -92,9 +92,10 @@ const OrderSchema = new Schema({
     },
 
     // Printing Info
-    printingUnit: {
+    Shopid: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'printingPressunit'
+        ref: 'printingPressunit',
+        required:true
     },
 
     // Production Info
@@ -112,12 +113,7 @@ const OrderSchema = new Schema({
 
     deliveryDate: Date,
 
-    shop: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'printingPressunit',
-        required: true
-    }
-
+   
 }, { timestamps: true });
 
 

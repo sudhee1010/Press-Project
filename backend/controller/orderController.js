@@ -3,11 +3,15 @@ import { Order } from '../model/OrderSchema.js';
 // Create a new Order
 const createOrder = async (req, res) => {
     try {
-        const { shopId, ...orderData } = req.body;
+        const shopId=req.user?.shopId;
+        if (!shopId) {
+            return res.status(400).json({ message: "No shopId found in token" });
+          }
+        
 
         const order = await Order.create({
-          ...orderData,
-          printingPressunit: shopId,  
+          ...req.body,
+          Shopid: shopId,  
         });
         res.status(201).json(order);
     } catch (error) {
@@ -23,7 +27,7 @@ const getAllOrders = async (req, res) => {
         if (!shopId) {
           return res.status(400).json({ message: 'shopId is required' });
         }
-        const orders = await Order.find()
+        const orders = await Order.find({shopId: shopId})
             .populate('onlineCustomer createdBy assignedDesigner printingUnit');
         res.status(200).json(orders);
     } catch (error) {
