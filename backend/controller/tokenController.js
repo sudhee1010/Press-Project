@@ -1,7 +1,8 @@
 import Token from "../model/tokenSchema.js";
 
 const generateToken = async (req, res) => {
-  const { shopId, orderId, customerName } = req.body;
+  const {  customerName } = req.body;
+  const{shopId}=req.user;
 
   try {
     if (!shopId) {
