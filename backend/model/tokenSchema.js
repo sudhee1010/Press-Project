@@ -1,32 +1,21 @@
 import mongoose from "mongoose";
 
 const tokenSchema = new mongoose.Schema({
-  tokenNumber: { type: Number, required: true },
-
-
-  status: {
-    type: String,
-    enum: ["waiting", "in-progress", "completed"],
-    default: "waiting"
-  },
-
   shopId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Shop", // or "User"
+    ref: "Shop",
     required: true
   },
-
-  orderId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Order"
+  date: {
+    type: String, // Format: YYYY-MM-DD
+    required: true
   },
-
-  issuedAt: {
-    type: Date,
-    default: Date.now
-  },
-
-  
+  currentToken: {
+    type: Number,
+    required: true,
+    default: 1
+  }
 });
 
-export default mongoose.model("Token", tokenSchema);
+const Token = mongoose.model("Token", tokenSchema);
+export default Token;
