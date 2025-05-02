@@ -14,8 +14,6 @@ const generateToken = async (req, res) => {
     const newToken = await Token.create({
       tokenNumber: nextTokenNumber,
       shopId,
-      orderId,
-      customerName, // optional now
       issuedAt: new Date()
     });
 
