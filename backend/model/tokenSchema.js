@@ -3,7 +3,6 @@ import mongoose from "mongoose";
 const tokenSchema = new mongoose.Schema({
   tokenNumber: { type: Number, required: true },
 
-  customerName: { type: String }, // no longer required
 
   status: {
     type: String,

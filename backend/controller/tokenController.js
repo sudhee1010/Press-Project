@@ -1,7 +1,6 @@
 import Token from "../model/tokenSchema.js";
 
 const generateToken = async (req, res) => {
-  const {  customerName } = req.body;
   const{shopId}=req.user;
 
   try {
