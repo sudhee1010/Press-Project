@@ -1,0 +1,26 @@
+{
+  "name": "press-project",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "client":"npm run dev --prefix client",
+    "backend":"npm run dev --prefix backend",
+    "dev":"concurrently \"npm run client\" \"npm run backend\""
+
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sudhee1010/Press-Project.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sudhee1010/Press-Project/issues"
+  },
+  "homepage": "https://github.com/sudhee1010/Press-Project#readme",
+  "description": "",
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
