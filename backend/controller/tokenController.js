@@ -1,35 +1,40 @@
 import Token from "../model/tokenSchema.js";
 
 const generateToken = async (req, res) => {
-  const { shopId, orderId, customerName } = req.body;
+  const { shopId } = req.user;
 
   try {
     if (!shopId) {
       return res.status(400).json({ message: "Shop ID is required" });
     }
 
-    const lastToken = await Token.findOne().sort({ tokenNumber: -1 });
-    const nextTokenNumber = lastToken ? lastToken.tokenNumber + 1 : 1;
+    // Format today's date as YYYY-MM-DD
+    const today = new Date().toISOString().split('T')[0];
 
-    const newToken = await Token.create({
-      tokenNumber: nextTokenNumber,
-      shopId,
-      orderId,
-      customerName, // optional now
-      issuedAt: new Date()
-    });
+    // Find or create a token document for today
+    let tokenDoc = await Token.findOne({ shopId, date: today });
+
+    if (!tokenDoc) {
+      tokenDoc = new Token({ shopId, date: today, currentToken: 1 });
+    } else {
+      tokenDoc.currentToken += 1;
+    }
+
+    await tokenDoc.save();
+
+    const formattedToken = `TKN-${tokenDoc.currentToken.toString().padStart(4, '0')}`;
 
     return res.status(200).json({
-      message: "Token generated",
-      token: `TKN-${newToken.tokenNumber.toString().padStart(4, "0")}`,
-      tokenNumber: newToken.tokenNumber,
+      message: 'Token generated',
+      token: formattedToken,
+      tokenNumber: tokenDoc.currentToken,
     });
 
   } catch (error) {
     console.error("Token generation error:", error);
     return res.status(500).json({
       message: "Error occurred during token generation",
-      data: error.message
+      data: error.message,
     });
   }
 };

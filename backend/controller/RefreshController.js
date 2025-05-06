@@ -30,10 +30,7 @@ const refreshAccessToken = (req, res) => {
   }
 };
 
-const logoutUser = (req, res) => {
-  authUtils.clearAuthCookies(res);
-  res.status(200).json({ message: "Logged out successfully" });
-};
+
 
 // Export functions at the end
-export { refreshAccessToken, logoutUser };
+export { refreshAccessToken };
