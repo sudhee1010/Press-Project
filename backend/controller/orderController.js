@@ -4,6 +4,7 @@ import { Order } from '../model/OrderSchema.js';
 const createOrder = async (req, res) => {
     try {
         const shopId=req.user?.shopId;
+        const onlineCustomerid=req.body;
         if (!shopId) {
             return res.status(400).json({ message: "No shopId found in token" });
           }
@@ -12,6 +13,7 @@ const createOrder = async (req, res) => {
         const order = await Order.create({
           ...req.body,
           Shopid: shopId,  
+          onlineCustomerid:onlineCustomerid||null
         });
         res.status(201).json(order);
     } catch (error) {

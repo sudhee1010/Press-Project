@@ -1,9 +1,6 @@
 import mongoose, { Schema } from "mongoose"
 const OrderSchema = new Schema({
-    tokenNumber: {
-        type: String, 
-        required: true
-    },
+
     // Customer Info
     walkInCustomer: {
         name: { type: String, required: true },
@@ -13,7 +10,8 @@ const OrderSchema = new Schema({
 
     onlineCustomer: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'OnlineCustomer'
+        ref: 'OnlineCustomer',
+        default:null
     },
 
     // Created By (Receptionist/Admin)
@@ -24,9 +22,9 @@ const OrderSchema = new Schema({
     },
 
     // Job Details
-    jobType:{
-        type:String,
-        required:true
+    jobType: {
+        type: String,
+        required: true
     }, // e.g., brochure, banner
 
     specifications: {
@@ -36,9 +34,9 @@ const OrderSchema = new Schema({
 
     },
 
-    deadline:{
-        type:Date,
-        required:true,
+    deadline: {
+        type: Date,
+        required: true,
     },
     notes: String,
 
@@ -64,7 +62,7 @@ const OrderSchema = new Schema({
         type: String,
         enum: ['design', 'design_print', 'design_print_production'],
         default: 'design',
-        required:true
+        required: true
     },
 
     // Assigned Designer
@@ -76,13 +74,13 @@ const OrderSchema = new Schema({
     // Uploaded design files
     designFiles: [String],
     // Billing Info
-    totalAmount:{
-        type:Number,
-        required:true
+    totalAmount: {
+        type: Number,
+        required: true
     },
-    amountPaid:{
-        type:Number,
-        required:true
+    amountPaid: {
+        type: Number,
+        required: true
     },
 
     paymentStatus: {
@@ -95,7 +93,7 @@ const OrderSchema = new Schema({
     Shopid: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'printingPressunit',
-        required:true
+        required: true
     },
 
     // Production Info
@@ -113,7 +111,7 @@ const OrderSchema = new Schema({
 
     deliveryDate: Date,
 
-   
+
 }, { timestamps: true });
 
 
