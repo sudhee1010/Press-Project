@@ -11,6 +11,8 @@ import userRoutes from "./route/userRoutes.js"
 import reviewRouter from "./route/reviewRoute.js";
 import refresh from "./route/RefreshRoutes.js";
 import paymentRoutes from "./route/paymentRoute.js"
+import { errorHandler } from "./middleware/errorMiddleware.js";
+import { notFound } from "./middleware/errorMiddleware.js";
 
 dotenv.config();
 const app = express();
@@ -28,6 +30,9 @@ app.use("/api/v1/users",userRoutes)
 app.use("/api/v1/review",reviewRouter)
 app.use("/api/refresh",refresh)
 app.use("api/v1/payment",paymentRoutes)
+app.use(errorHandler)
+app.use(notFound)
+
 
 
 const PORT = process.env.PORT || 3000;
