@@ -155,7 +155,7 @@ const OnlineCustomerRegisterPage = () => {
 
       <p className="text-gray-500 text-sm mt-4 mb-10">
         Already have an account?{" "}
-        <Link to="/signUp" className="text-indigo-500 hover:underline">
+        <Link to="/login-customer" className="text-indigo-500 hover:underline">
           Login
         </Link>
       </p>
