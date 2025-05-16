@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "../slices/authSlice";
 import { useCustomerLoginMutation } from "../slices/onlineSlice";
@@ -107,9 +107,10 @@ function CustomerLogin() {
 
       <p className="text-gray-500 text-sm mt-3 mb-11">
         Don’t have an account?{" "}
-        <a className="text-indigo-500 hover:underline" href="#">
+        
+        <Link to="#" className="text-indigo-500 hover:underline">
           Sign up
-        </a>
+        </Link>
       </p>
     </form>
   );
