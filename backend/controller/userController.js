@@ -3,8 +3,9 @@ import User from "../model/userSchema.js";
 import generateToken from "../utils/generateToken.js";
 
 export const registerUser = asyncHandler(async (req, res) => {
-  console.log(req);
   const { name, email, password, role } = req.body;
+  console.log(req.user);
+  const { shopId } = req.user;
 
   const userExists = await User.findOne({ email });
   if (userExists)

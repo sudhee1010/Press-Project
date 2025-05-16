@@ -137,7 +137,7 @@ function CustomerLogin() {
 
       <p className="text-gray-500 text-sm mt-3 mb-11">
         Don’t have an account?{" "}
-        <Link to="#" className="text-indigo-500 hover:underline">
+        <Link to="/register-customer" className="text-indigo-500 hover:underline">
           Sign up
         </Link>
       </p>

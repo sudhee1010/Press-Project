@@ -14,7 +14,10 @@ import authenticateToken from "../middleware/authenticateToken.js";
 import authorizeRoles from "../middleware/authMiddleware.js";
 const router = express.Router();
 
-router.route("/").post(registerUser).get(authenticateToken, getUsers);
+router
+  .route("/")
+  .post(authenticateToken, authorizeRoles("admin"), registerUser)
+  .get(authenticateToken, getUsers);
 router.post("/login", loginUser);
 router.post("/logout", logoutUser);
 router
