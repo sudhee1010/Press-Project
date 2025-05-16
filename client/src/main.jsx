@@ -14,6 +14,8 @@ import LandingPage from "./pages/LandingPage";
 import RegisterEmploye from "./pages/RegisterEmploye";
 import store from "./store";
 import { Provider } from "react-redux";
+import CustomerLogin from "./pages/CustomerLogin";
+import RegisterShop from "./pages/RegisterShop";
 
 /*
 // Public Pages
@@ -57,9 +59,9 @@ const router = createBrowserRouter([
     element: <PublicLayout />,
     children: [
       { index: true, element: <LandingPage /> },
-      // { path: "login", element: <CustomerLogin /> },
+      { path: "login-customer", element: <CustomerLogin /> },
       // { path: 'register-customer', element: <CustomerRegister /> },
-      // { path: 'register-shop', element: <ShopRegister /> },
+      { path: "register-shop", element: <RegisterShop /> },
       // { path: 'forgot-password', element: <ForgotPassword /> },
       // { path: 'reset-password/:token', element: <ResetPassword /> },
       // { path: 'terms', element: <Terms /> },
