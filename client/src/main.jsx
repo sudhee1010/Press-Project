@@ -17,6 +17,7 @@ import { Provider } from "react-redux";
 import CustomerLogin from "./pages/CustomerLogin";
 import RegisterShop from "./pages/RegisterShop";
 import AdminDashboard from "./pages/AdminDashboard";
+import OnlineCustomerRegisterPage from "./pages/OnlineCustomerRegisterPage";
 
 /*
 // Public Pages
