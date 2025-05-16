@@ -1,69 +1,10 @@
-// import React from 'react'
-// import { useState } from "react";
-// // import { useRegisterMutation } from "../slices/usersApiSlice";
-// import { useNavigate, useSearchParams } from "react-router-dom";
-// import { useDispatch } from "react-redux";
-// import { setCredentials } from "../slices/authSlice";
-
-// function OnlineCustomerRegisterPage() {
-//   const [name, setName] = useState("");
-//   const [email, setEmail] = useState("");
-//   const [password, setPassword] = useState("");
-//   const [phone, setPhone] = useState("");
-//   const [whatsapp, setWhatsapp] = useState("");
-//   const [address, setAddress] = useState("");
-
-//   const [searchParams] = useSearchParams();
-//   const redirect = searchParams.get("redirect") || "/";
-//   const dispatch = useDispatch();
-//   const navigate = useNavigate();
-//   // const [register] = useRegisterMutation();
-
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-
-//     if (password !== confirmPassword) {
-//       setError("Passwords do not match");
-//       return;
-//     }
-
-//     setError("");
-//     // Example registration logic
-//     console.log("Username:", name);
-//     console.log("Email:", email);
-//     console.log("Password:", password);
-//     console.log("Role:", role);
-
-//     try {
-//       const res = await register({ name, email, password, phone, whatsapp, address}).unwrap();
-//       dispatch(setCredentials({ ...res }));
-//       //   toast.success("Registration successful");
-//       console.log("register successfull");
-//       navigate(redirect);
-//     } catch (error) {
-//       //   toast.error(error?.data?.message || "Registration failed! ❌");
-//       console.log(error);
-//     }
-//   };
-
-//   return (
-//     <div>onlineCustomerRegisterPage</div>
-//   )
-// }
-
-// export default onlineCustomerRegisterPage
-
-
-
-
-
-
 import React, { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "../slices/authSlice";
-import { useRegisterMutation } from "../slices/usersApiSlice"; 
-import "./Register.css"; 
+import { useCustomerRegisterMutation } from "../slices/onlineSlice";
+import { Link } from "react-router-dom";
+// import { ToastContainer, toast } from "react-toastify";
 
 const OnlineCustomerRegisterPage = () => {
   const [form, setForm] = useState({
@@ -81,7 +22,7 @@ const OnlineCustomerRegisterPage = () => {
   const redirect = searchParams.get("redirect") || "/";
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [register] = useRegisterMutation();
+  const [customerRegister] = useCustomerRegisterMutation();
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -94,9 +35,13 @@ const OnlineCustomerRegisterPage = () => {
       setError("Passwords do not match");
       return;
     }
+    if (!form.password || form.password.length < 10 || !/[A-Z]/.test(form.password) || !/[a-z]/.test(form.password) || !/[0-9]/.test(form.password) ||  !/[!@#$%^&*(),.?":{}|<>_\-+=\[\]\\\/~`]/.test(form.password)) {
+      setError("Password should have 1 uppercase, 1 lowercase, 1 special character, 1 number, and at least 10 characters");
+      return
+  }
 
     try {
-      const res = await register({
+      const res = await customerRegister({
         name: form.name,
         email: form.email,
         password: form.password,
@@ -109,24 +54,112 @@ const OnlineCustomerRegisterPage = () => {
       navigate(redirect);
     } catch (error) {
       setError(error?.data?.message || "Registration failed!");
+      console.log(error, "error")
     }
   };
 
   return (
-    <div className="register-container">
-      <h2>Customer Registration</h2>
-      <form className="register-form" onSubmit={handleSubmit}>
-        <input type="text" name="name" placeholder="Name" value={form.name} onChange={handleChange} required />
-        <input type="email" name="email" placeholder="Email" value={form.email} onChange={handleChange} required />
-        <input type="password" name="password" placeholder="Password" value={form.password} onChange={handleChange} required />
-        <input type="password" name="confirmPassword" placeholder="Confirm Password" value={form.confirmPassword} onChange={handleChange} required />
-        <input type="text" name="phone" placeholder="Phone" value={form.phone} onChange={handleChange} required />
-        <input type="text" name="whatsapp" placeholder="WhatsApp" value={form.whatsapp} onChange={handleChange} />
-        <textarea name="address" placeholder="Address" value={form.address} onChange={handleChange}></textarea>
-        {error && <div className="error">{error}</div>}
-        <button type="submit">Register</button>
-      </form>
-    </div>
+    <form
+      onSubmit={handleSubmit}
+      className="max-w-2xl w-full mx-auto text-center border border-gray-300/60 rounded-2xl px-8 bg-white"
+    >
+      <h1 className="text-gray-900 text-3xl mt-10 font-medium">Register</h1>
+      <p className="text-gray-500 text-sm mt-2 mb-4">Create your account</p>
+
+      {error && (
+        <p className="text-red-500 text-sm mb-4 text-center">{error}</p>
+      )}
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <input
+          type="text"
+          name="name"
+          placeholder="Name"
+          className="w-full h-12 rounded-full border border-gray-300/80 pl-6 text-sm outline-none text-gray-700"
+          value={form.name}
+          onChange={handleChange}
+          required
+        />
+
+        <input
+          type="email"
+          name="email"
+          placeholder="Email"
+          className="w-full h-12 rounded-full border border-gray-300/80 pl-6 text-sm outline-none text-gray-700"
+          value={form.email}
+          onChange={handleChange}
+          required
+        />
+
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          className="w-full h-12 rounded-full border border-gray-300/80 pl-6 text-sm outline-none text-gray-700"
+          value={form.password}
+          onChange={handleChange}
+          required
+          title="Password should have 1 uppercase, 1 lowercase, 1 special character, 1 number, and at least 10 characters"
+        />
+
+        <input
+          type="password"
+          name="confirmPassword"
+          placeholder="Confirm Password"
+          className="w-full h-12 rounded-full border border-gray-300/80 pl-6 text-sm outline-none text-gray-700"
+          value={form.confirmPassword}
+          onChange={handleChange}
+          required
+          title="Password should have 1 uppercase, 1 lowercase, 1 special character, 1 number, and at least 10 characters"
+        />
+
+      <input
+        type="text"
+        name="phone"
+        placeholder="Phone"
+        className="w-full h-12 rounded-full border border-gray-300/80 pl-6 text-sm outline-none text-gray-700"
+        value={form.phone}
+        onChange={handleChange}
+        required
+      />
+
+      <input
+        type="text"
+        name="whatsapp"
+        placeholder="WhatsApp"
+        className="w-full h-12 rounded-full border border-gray-300/80 pl-6 text-sm outline-none text-gray-700"
+        value={form.whatsapp}
+        onChange={handleChange}
+        required
+      />
+
+      <input
+        type="text"
+        name="address"
+        placeholder="Address"
+        className="w-full h-12 rounded-full border border-gray-300/80 pl-6 text-sm outline-none text-gray-700 col-span-1 md:col-span-2"
+        value={form.address}
+        onChange={handleChange}
+        required
+      />
+      </div>
+
+
+
+      <button
+        type="submit"
+        className="mt-6 w-full h-11 rounded-full text-white bg-indigo-500 hover:opacity-90 transition-opacity"
+      >
+        Register
+      </button>
+
+      <p className="text-gray-500 text-sm mt-4 mb-10">
+        Already have an account?{" "}
+        <Link to="/signUp" className="text-indigo-500 hover:underline">
+          Login
+        </Link>
+      </p>
+    </form>
   );
 };
 
