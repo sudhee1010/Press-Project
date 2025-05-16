@@ -137,14 +137,13 @@ const Header = () => {
             </Link>
           ))}
 
-          <button className="border px-4 py-1 text-sm font-light rounded-full cursor-pointer transition-all">
-            New Launch
+          <button className="bg-white text-black px-4 py-2 rounded-md ml-4 transition-all duration-500">
+            Work with Us
           </button>
-
-          <button className="bg-black text-white px-8 py-2.5 rounded-full transition-all duration-500">
+          <button className="bg-white text-black border border-gray-300 px-4 py-2 rounded-md ml-4 transition-all duration-500">
             Login
           </button>
-          <button className="bg-black text-white px-8 py-2.5 rounded-full transition-all duration-500">
+          <button className="bg-indigo-500 text-white px-4 py-2 rounded-md ml-4 transition-all duration-500">
             SignUp
           </button>
         </div>

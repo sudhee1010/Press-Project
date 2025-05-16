@@ -57,7 +57,7 @@ const router = createBrowserRouter([
     element: <PublicLayout />,
     children: [
       { index: true, element: <LandingPage /> },
-      // { path: 'login', element: <Login /> },
+      // { path: "login", element: <CustomerLogin /> },
       // { path: 'register-customer', element: <CustomerRegister /> },
       // { path: 'register-shop', element: <ShopRegister /> },
       // { path: 'forgot-password', element: <ForgotPassword /> },
