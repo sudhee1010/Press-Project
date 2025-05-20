@@ -16,6 +16,7 @@ import store from "./store";
 import { Provider } from "react-redux";
 import CustomerLogin from "./pages/CustomerLogin";
 import RegisterShop from "./pages/RegisterShop";
+import ShopLogin from "./pages/ShopLogin";
 import AdminDashboard from "./pages/AdminDashboard";
 import OnlineCustomerRegisterPage from "./pages/OnlineCustomerRegisterPage";
 
@@ -64,6 +65,7 @@ const router = createBrowserRouter([
       { path: "login-customer", element: <CustomerLogin /> },
       { path: "register-customer", element: <OnlineCustomerRegisterPage /> },
       { path: "register-shop", element: <RegisterShop /> },
+      { path: "login-shop", element: <ShopLogin /> },
       // { path: 'forgot-password', element: <ForgotPassword /> },
       // { path: 'reset-password/:token', element: <ResetPassword /> },
       // { path: 'terms', element: <Terms /> },

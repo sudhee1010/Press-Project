@@ -1,10 +1,13 @@
 import { useState } from "react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "../slices/authSlice";
-import { useCustomerLoginMutation } from "../slices/onlineSlice";
+// import { useShopLoginMutation } from "../slices/shopSlice";
+import { useShoploginMutation } from "../slices/shopSlice";
+import { Link } from "react-router-dom";
+import { FiEye, FiEyeOff } from "react-icons/fi";
 
-function CustomerLogin() {
+function ShopLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -12,51 +15,20 @@ function CustomerLogin() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const redirect = searchParams.get("redirect") || "/";
+  const redirect = searchParams.get("redirect") || "/admin";
+  const [showPassword, setShowPassword] = useState(false);
 
-  const [login] = useCustomerLoginMutation();
-
-  const validateInputs = () => {
-    if (!email || !/\S+@\S+\.\S+/.test(email)) {
-      setError("Please enter a valid email address.");
-      return false;
-    }
-
-    if (
-      !password ||
-      password.length < 8 ||
-      !/[A-Z]/.test(password) ||
-      !/[a-z]/.test(password) ||
-      !/[0-9]/.test(password)
-    ) {
-      setError("Password must be at least 8 characters long and include uppercase, lowercase, and a number.");
-      return false;
-    }
-
-    return true;
-  };
+  const [ShopLogin] = useShoploginMutation();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
-
-    // Client-side validation
-    if (!validateInputs()) return;
 
     try {
-      const res = await login({ email, password }).unwrap();
+      const res = await ShopLogin({ email, password }).unwrap();
       dispatch(setCredentials({ ...res }));
       navigate(redirect);
     } catch (err) {
-      const message = err?.data?.message?.toLowerCase() || err?.error?.toLowerCase() || "";
-
-      if (message.includes("email") || message.includes("not found")) {
-        setError("We cannot find an account with that email address.");
-      } else if (message.includes("password") || message.includes("incorrect")) {
-        setError("Your password is incorrect.");
-      } else {
-        setError("There was a problem logging in. Please try again.");
-      }
+      setError(err?.data?.message || "Login failed! Please try again.");
     }
   };
 
@@ -65,7 +37,7 @@ function CustomerLogin() {
       onSubmit={handleSubmit}
       className="max-w-[384px] w-full text-center border border-gray-300/60 rounded-2xl px-8 bg-white mx-auto mt-10 shadow-md"
     >
-      <h1 className="text-gray-900 text-3xl mt-10 font-medium">Login</h1>
+      <h1 className="text-gray-900 text-3xl mt-10 font-medium">Shop Login</h1>
       <p className="text-gray-500 text-sm mt-2">Please sign in to continue</p>
 
       {error && (
@@ -73,6 +45,7 @@ function CustomerLogin() {
       )}
 
       <div className="flex items-center w-full mt-10 bg-white border border-gray-300/80 h-12 rounded-full overflow-hidden pl-6 gap-2">
+        {/* Email Icon */}
         <svg
           width="16"
           height="11"
@@ -98,28 +71,44 @@ function CustomerLogin() {
         />
       </div>
 
-      <div className="flex items-center mt-4 w-full bg-white border border-gray-300/80 h-12 rounded-full overflow-hidden pl-6 gap-2">
-        <svg
+      {/* <div className="flex items-center mt-4 w-full bg-white border border-gray-300/80 h-12 rounded-full overflow-hidden pl-6 gap-2"> */}
+      {/* Password Icon */}
+      {/* <svg
           width="13"
           height="17"
           viewBox="0 0 13 17"
           fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
+          xmlns="http://www.w3.org/2000/svg" */}
+      {/* > */}
+      {/* <path
+            d="M13 8.5c0-.938-.729-1.7-1.625-1.7h-.812V4.25C10.563 1.907 8.74 0 6.5 0S2.438 1.907 2.438 4.25V6.8h-.813C.729 6.8 0 7.562 0 8.5v6.8c0 .938.729 1.7 1.625 1.7h9.75c.896 0 1.625-.762 1.625-1.7zM4.063 4.25c0-1.406 1.093-2.55 2.437-2.55s2.438 1.144 2.438 2.55V6.8H4.061z"
+            fill="#6B7280"
+          />
+        </svg> */}
+
+      {/* Password Field with Eye Toggle */}
+      <div className="relative flex items-center mt-4 w-full bg-white border border-gray-300/80 h-12 rounded-full overflow-hidden pl-6 gap-2">
+        <svg width="13" height="17" viewBox="0 0 13 17" fill="none">
           <path
             d="M13 8.5c0-.938-.729-1.7-1.625-1.7h-.812V4.25C10.563 1.907 8.74 0 6.5 0S2.438 1.907 2.438 4.25V6.8h-.813C.729 6.8 0 7.562 0 8.5v6.8c0 .938.729 1.7 1.625 1.7h9.75c.896 0 1.625-.762 1.625-1.7zM4.063 4.25c0-1.406 1.093-2.55 2.437-2.55s2.438 1.144 2.438 2.55V6.8H4.061z"
             fill="#6B7280"
           />
         </svg>
-
         <input
-          type="password"
+          type={showPassword ? "text" : "password"}
           placeholder="Password"
-          className="bg-transparent text-gray-500 placeholder-gray-500 outline-none text-sm w-full h-full"
+          className="bg-transparent text-gray-500 placeholder-gray-500 outline-none text-sm w-full h-full pr-10"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
         />
+        {/* Eye Icon */}
+        <span
+          onClick={() => setShowPassword((prev) => !prev)}
+          className="absolute right-4 text-gray-500 cursor-pointer"
+        >
+          {showPassword ? <FiEyeOff /> : <FiEye />}
+        </span>
       </div>
 
       <div className="mt-5 text-left text-indigo-500">
@@ -137,7 +126,8 @@ function CustomerLogin() {
 
       <p className="text-gray-500 text-sm mt-3 mb-11">
         Don’t have an account?{" "}
-        <Link to="/register-customer" className="text-indigo-500 hover:underline">
+        <Link to="/register-shop"
+          className="text-indigo-500 hover:underline" href="#">
           Sign up
         </Link>
       </p>
@@ -145,4 +135,4 @@ function CustomerLogin() {
   );
 }
 
-export default CustomerLogin;
+export default ShopLogin;

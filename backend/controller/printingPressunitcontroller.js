@@ -6,25 +6,25 @@ import signinValidation from '../validation/signinValidation.js';
 // Create a new printing unit 
 const createPrintingUnit = async (req, res) => {
     try {
-        const { name,email,password,phone, whatsapp,address,role } = req.body;
+        const { name, email, password, phone, whatsapp, address, role } = req.body;
 
         // Hash the password
         const hashedPassword = await bcrypt.hash(password, 10);
 
         // Create the unit with the hashed password
         const unit = await printingPressunit.create({
-            name,email,phone, whatsapp,address,role,
+            name, email, phone, whatsapp, address, role,
             password: hashedPassword
         });
 
         // Convert Mongoose doc to plain object to delete password
         const unitObject = unit.toObject();
         delete unitObject.password;
-        const payload= {
-            shopId:unit._id,
-            role:unit.role
+        const payload = {
+            shopId: unit._id,
+            role: unit.role
         }
-        generateToken(res,payload)
+        generateToken(res, payload)
 
         res.status(201).json({ data: unitObject, message: 'Printing unit created successfully' });
     } catch (err) {
@@ -65,18 +65,18 @@ const getUnitById = async (req, res) => {
 };
 
 // Update a Printing Unit
-const updateUnit = async (req, res) => {
-    try {
-        if (!req.user) {
-            return res.status(401).json({ message: 'Not authorized, token missing or invalid' });
-        }
-        const updated = await printingPressunit.findByIdAndUpdate(req.params.id, req.body, { new: true });
-        if (!updated) return res.status(404).json({ message: 'Printing unit not found' });
-        res.status(200).json({ data: updated, message: 'Unit updated successfully' });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-};
+// const updateUnit = async (req, res) => {
+//     try {
+//         if (!req.user) {
+//             return res.status(401).json({ message: 'Not authorized, token missing or invalid' });
+//         }
+//         const updated = await printingPressunit.findByIdAndUpdate(req.params.id, req.body, { new: true });
+//         if (!updated) return res.status(404).json({ message: 'Printing unit not found' });
+//         res.status(200).json({ data: updated, message: 'Unit updated successfully' });
+//     } catch (err) {
+//         res.status(500).json({ error: err.message });
+//     }
+// };
 // Delete a Printing Unit
 const deleteUnit = async (req, res) => {
     try {
@@ -114,18 +114,18 @@ const signin = async (req, res) => {
             errors.password = "wrong password"
             return res.status(400).json(errors)
         }
-        const payload={
-            shopId:customer._id,
-            role:customer.role
+        const payload = {
+            shopId: customer._id,
+            role: customer.role
         }
-        generateToken(res,payload)
+        generateToken(res, payload)
         // const token = jwt.sign(
         //     { _id: student._id },
         //     "MEGHA_M",
         //    { expiresIn: "8h" }
         // )
         // const userId= student._id
-        res.status(200).json({message: "login succesfully",data:customer })
+        res.status(200).json({ message: "login succesfully", data: customer })
 
     }
 
@@ -138,27 +138,67 @@ const signin = async (req, res) => {
 //verification
 const verifyPrintingUnit = async (req, res) => {
     try {
-      const unit = await printingPressunit.findById(req.params.id);
-      if (!unit) {
-        return res.status(404).json({ message: 'Printing unit not found' });
-      }
-  
-      unit.verified = true;
-      await unit.save();
+        const unit = await printingPressunit.findById(req.params.id);
+        if (!unit) {
+            return res.status(404).json({ message: 'Printing unit not found' });
+        }
 
-      const payload = {
-        shopId: unit._id,
-        role: unit.role  
-      };
-      generateToken(res, payload);
-  
-      res.status(200).json({ message: 'Printing unit verified successfully', data: unit });
+        unit.verified = true;
+        await unit.save();
+
+        const payload = {
+            shopId: unit._id,
+            role: unit.role
+        };
+        generateToken(res, payload);
+
+        res.status(200).json({ message: 'Printing unit verified successfully', data: unit });
     } catch (err) {
-      res.status(500).json({ error: err.message });
+        res.status(500).json({ error: err.message });
     }
-  };
-  
+};
+// Logout
+const adminLogout = (req, res) => {
+    res.clearCookie("jwt", {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict"
+    });
+    res.status(200).json({ message: "Logout successful" });
+};
+
+// Update a Printing Unit
+const adminupdateUnit = async (req, res) => {
+    try {
+        if (!req.user) {
+            return res.status(401).json({ message: 'Not authorized, token missing or invalid' });
+        }
+
+        const unit = await printingPressunit.findById(req.params.id);
+
+        if (!unit) {
+            return res.status(404).json({ message: 'Printing unit not found' });
+        }
+
+        // Only allow update if the logged-in user is the creator
+        if (unit.createdBy.toString() !== req.user.id) {
+            return res.status(403).json({ message: 'Access denied. You can only update units you created.' });
+        }
+
+        const updated = await printingPressunit.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            { new: true }
+        );
+
+        res.status(200).json({ data: updated, message: 'Unit updated successfully' });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
 
 
 
-export { createPrintingUnit, getAllUnits, getUnitById ,updateUnit,deleteUnit,signin,verifyPrintingUnit};
+
+
+export { createPrintingUnit, getAllUnits, getUnitById,deleteUnit, signin, verifyPrintingUnit, adminLogout,adminupdateUnit };

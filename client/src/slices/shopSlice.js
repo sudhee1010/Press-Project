@@ -6,7 +6,7 @@ export const ShopApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     Shoplogin: builder.mutation({
       query: (data) => ({
-        url: `${SHOP_URL}/auth`,
+        url: `${SHOP_URL}/signin`,
         method: "POST",
         body: data,
       }),
@@ -62,7 +62,7 @@ export const ShopApiSlice = apiSlice.injectEndpoints({
 });
 
 export const {
-  useLoginMutation,
+  useShoploginMutation,
   useShopRegisterMutation,
   useLogoutMutation,
   useProfileMutation,
