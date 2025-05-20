@@ -3,10 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "client":"npm run dev --prefix client",
-    "backend":"npm run dev --prefix backend",
-    "dev":"concurrently \"npm run client\" \"npm run backend\""
-
+    "client": "npm run dev --prefix client",
+    "backend": "npm run dev --prefix backend",
+    "dev": "concurrently \"npm run client\" \"npm run backend\""
   },
   "repository": {
     "type": "git",
@@ -22,5 +21,8 @@
   "description": "",
   "devDependencies": {
     "concurrently": "^9.1.2"
+  },
+  "dependencies": {
+    "react-icons": "^5.5.0"
   }
 }
