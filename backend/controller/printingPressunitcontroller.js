@@ -65,18 +65,18 @@ const getUnitById = async (req, res) => {
 };
 
 // Update a Printing Unit
-const updateUnit = async (req, res) => {
-    try {
-        if (!req.user) {
-            return res.status(401).json({ message: 'Not authorized, token missing or invalid' });
-        }
-        const updated = await printingPressunit.findByIdAndUpdate(req.params.id, req.body, { new: true });
-        if (!updated) return res.status(404).json({ message: 'Printing unit not found' });
-        res.status(200).json({ data: updated, message: 'Unit updated successfully' });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-};
+// const updateUnit = async (req, res) => {
+//     try {
+//         if (!req.user) {
+//             return res.status(401).json({ message: 'Not authorized, token missing or invalid' });
+//         }
+//         const updated = await printingPressunit.findByIdAndUpdate(req.params.id, req.body, { new: true });
+//         if (!updated) return res.status(404).json({ message: 'Printing unit not found' });
+//         res.status(200).json({ data: updated, message: 'Unit updated successfully' });
+//     } catch (err) {
+//         res.status(500).json({ error: err.message });
+//     }
+// };
 // Delete a Printing Unit
 const deleteUnit = async (req, res) => {
     try {
@@ -166,6 +166,7 @@ const adminLogout = (req, res) => {
     });
     res.status(200).json({ message: "Logout successful" });
 };
+
 // Update a Printing Unit
 const adminupdateUnit = async (req, res) => {
     try {
@@ -200,4 +201,4 @@ const adminupdateUnit = async (req, res) => {
 
 
 
-export { createPrintingUnit, getAllUnits, getUnitById, updateUnit, deleteUnit, signin, verifyPrintingUnit, adminLogout,adminupdateUnit };
+export { createPrintingUnit, getAllUnits, getUnitById,deleteUnit, signin, verifyPrintingUnit, adminLogout,adminupdateUnit };
