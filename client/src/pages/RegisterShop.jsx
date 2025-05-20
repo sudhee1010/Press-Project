@@ -137,7 +137,7 @@
 
 import { useState } from "react";
 import { useShopRegisterMutation } from "../slices/shopSlice.js";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "../slices/authSlice";
 
@@ -194,8 +194,8 @@ function RegisterShop() {
   });
 
   const [error, setError] = useState("");
-  const [searchParams] = useSearchParams();
-  const redirect = searchParams.get("redirect") || "/admin";
+  // const [searchParams] = useSearchParams();
+  // const redirect = searchParams.get("redirect") || "/admin";
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [ShopRegister] = useShopRegisterMutation();
@@ -223,7 +223,7 @@ function RegisterShop() {
       }).unwrap();
 
       dispatch(setCredentials({ ...res }));
-      navigate(redirect);
+      navigate("/admin");
     } catch (error) {
       setError(error?.data?.message || "Registration failed!");
       console.log(error, "error");
@@ -325,9 +325,9 @@ function RegisterShop() {
 
       <p className="text-gray-500 text-sm mt-4 mb-10">
         Already have an account?{" "}
-        <a href="/login" className="text-indigo-500 hover:underline">
+        <Link to="" className="text-indigo-500 hover:underline">
           Login
-        </a>
+        </Link>
       </p>
     </form>
   );
