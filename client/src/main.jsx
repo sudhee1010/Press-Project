@@ -14,6 +14,10 @@ import LandingPage from "./pages/LandingPage";
 import RegisterEmploye from "./pages/RegisterEmploye";
 import store from "./store";
 import { Provider } from "react-redux";
+import CustomerLogin from "./pages/CustomerLogin";
+import RegisterShop from "./pages/RegisterShop";
+import AdminDashboard from "./pages/AdminDashboard";
+import OnlineCustomerRegisterPage from "./pages/OnlineCustomerRegisterPage";
 
 /*
 // Public Pages
@@ -57,9 +61,9 @@ const router = createBrowserRouter([
     element: <PublicLayout />,
     children: [
       { index: true, element: <LandingPage /> },
-      // { path: 'login', element: <Login /> },
-      // { path: 'register-customer', element: <CustomerRegister /> },
-      // { path: 'register-shop', element: <ShopRegister /> },
+      { path: "login-customer", element: <CustomerLogin /> },
+      { path: "register-customer", element: <OnlineCustomerRegisterPage /> },
+      { path: "register-shop", element: <RegisterShop /> },
       // { path: 'forgot-password', element: <ForgotPassword /> },
       // { path: 'reset-password/:token', element: <ResetPassword /> },
       // { path: 'terms', element: <Terms /> },
@@ -74,7 +78,7 @@ const router = createBrowserRouter([
     element: <DashboardLayout />,
     // loader: adminLoader,
     children: [
-      // { index: true, element: <AdminDashboard /> },
+      { index: true, element: <AdminDashboard /> },
       // { path: 'orders', element: <AdminOrders /> },
       { path: "register", element: <RegisterEmploye /> },
       // { path: 'customers', element: <CustomerList /> },
