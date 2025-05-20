@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { setCredentials } from "../slices/authSlice";
 import { useCustomerRegisterMutation } from "../slices/onlineSlice";
 import { Link } from "react-router-dom";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 // import { ToastContainer, toast } from "react-toastify";
 
 const OnlineCustomerRegisterPage = () => {
@@ -23,6 +24,9 @@ const OnlineCustomerRegisterPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [customerRegister] = useCustomerRegisterMutation();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -35,10 +39,10 @@ const OnlineCustomerRegisterPage = () => {
       setError("Passwords do not match");
       return;
     }
-    if (!form.password || form.password.length < 10 || !/[A-Z]/.test(form.password) || !/[a-z]/.test(form.password) || !/[0-9]/.test(form.password) ||  !/[!@#$%^&*(),.?":{}|<>_\-+=\[\]\\\/~`]/.test(form.password)) {
+    if (!form.password || form.password.length < 10 || !/[A-Z]/.test(form.password) || !/[a-z]/.test(form.password) || !/[0-9]/.test(form.password) || !/[!@#$%^&*(),.?":{}|<>_\-+=\[\]\\\/~`]/.test(form.password)) {
       setError("Password should have 1 uppercase, 1 lowercase, 1 special character, 1 number, and at least 10 characters");
       return
-  }
+    }
 
     try {
       const res = await customerRegister({
@@ -91,57 +95,77 @@ const OnlineCustomerRegisterPage = () => {
           required
         />
 
+        <div className="relative">
+          <input
+            type={showPassword ? "text" : "password"}
+            name="password"
+            placeholder="Password"
+            className="w-full h-12 rounded-full border border-gray-300/80 pl-6 pr-12 text-sm outline-none text-gray-700"
+            value={form.password}
+            onChange={handleChange}
+            required
+            title="Password should have 1 uppercase, 1 lowercase, 1 special character, 1 number, and at least 10 characters"
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500"
+          >
+            {showPassword ? <FaEyeSlash /> : <FaEye />}
+          </button>
+        </div>
+
+
+        <div className="relative">
+          <input
+            type={showConfirmPassword ? "text" : "password"}
+            name="confirmPassword"
+            placeholder="Confirm Password"
+            className="w-full h-12 rounded-full border border-gray-300/80 pl-6 pr-12 text-sm outline-none text-gray-700"
+            value={form.confirmPassword}
+            onChange={handleChange}
+            required
+            title="Password should have 1 uppercase, 1 lowercase, 1 special character, 1 number, and at least 10 characters"
+          />
+          <button
+            type="button"
+            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+            className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500"
+          >
+            {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+          </button>
+        </div>
+
+
         <input
-          type="password"
-          name="password"
-          placeholder="Password"
+          type="text"
+          name="phone"
+          placeholder="Phone"
           className="w-full h-12 rounded-full border border-gray-300/80 pl-6 text-sm outline-none text-gray-700"
-          value={form.password}
+          value={form.phone}
           onChange={handleChange}
           required
-          title="Password should have 1 uppercase, 1 lowercase, 1 special character, 1 number, and at least 10 characters"
         />
 
         <input
-          type="password"
-          name="confirmPassword"
-          placeholder="Confirm Password"
+          type="text"
+          name="whatsapp"
+          placeholder="WhatsApp"
           className="w-full h-12 rounded-full border border-gray-300/80 pl-6 text-sm outline-none text-gray-700"
-          value={form.confirmPassword}
+          value={form.whatsapp}
           onChange={handleChange}
           required
-          title="Password should have 1 uppercase, 1 lowercase, 1 special character, 1 number, and at least 10 characters"
         />
 
-      <input
-        type="text"
-        name="phone"
-        placeholder="Phone"
-        className="w-full h-12 rounded-full border border-gray-300/80 pl-6 text-sm outline-none text-gray-700"
-        value={form.phone}
-        onChange={handleChange}
-        required
-      />
-
-      <input
-        type="text"
-        name="whatsapp"
-        placeholder="WhatsApp"
-        className="w-full h-12 rounded-full border border-gray-300/80 pl-6 text-sm outline-none text-gray-700"
-        value={form.whatsapp}
-        onChange={handleChange}
-        required
-      />
-
-      <input
-        type="text"
-        name="address"
-        placeholder="Address"
-        className="w-full h-12 rounded-full border border-gray-300/80 pl-6 text-sm outline-none text-gray-700 col-span-1 md:col-span-2"
-        value={form.address}
-        onChange={handleChange}
-        required
-      />
+        <input
+          type="text"
+          name="address"
+          placeholder="Address"
+          className="w-full h-12 rounded-full border border-gray-300/80 pl-6 text-sm outline-none text-gray-700 col-span-1 md:col-span-2"
+          value={form.address}
+          onChange={handleChange}
+          required
+        />
       </div>
 
 
@@ -155,7 +179,7 @@ const OnlineCustomerRegisterPage = () => {
 
       <p className="text-gray-500 text-sm mt-4 mb-10">
         Already have an account?{" "}
-        <Link to="/signUp" className="text-indigo-500 hover:underline">
+        <Link to="/login-customer" className="text-indigo-500 hover:underline">
           Login
         </Link>
       </p>
