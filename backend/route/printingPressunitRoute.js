@@ -11,7 +11,7 @@ printingUnitRouter.route("/getunitbyid/:id").get(authenticateToken,authorizeRole
 // printingUnitRouter.route("/updateunit/:id").put(updateUnit);
 printingUnitRouter.route("/deleteunit/:id").delete(authenticateToken,authorizeRoles("superadmin"),deleteUnit);
 printingUnitRouter.route("/signin").post(signin);
-// printingUnitRouter.route('/:id/verify').put(authenticateToken, authorizeRoles('superadmin'), verifyPrintingUnit);
+printingUnitRouter.route('/:id/verify').put(authenticateToken, authorizeRoles('superadmin'), verifyPrintingUnit);
 printingUnitRouter.route('/adminlogout').post(authenticateToken, authorizeRoles('admin'),adminLogout);
 printingUnitRouter.route("/adminupdateunit").put(adminupdateUnit);
 

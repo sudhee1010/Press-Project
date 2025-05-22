@@ -4,6 +4,35 @@ import generateToken from '../utils/generateToken.js';
 import signinValidation from '../validation/signinValidation.js';
 
 // Create a new printing unit 
+// const createPrintingUnit = async (req, res) => {
+//     try {
+//         const { name, email, password, phone, whatsapp, address, role } = req.body;
+
+//         // Hash the password
+//         const hashedPassword = await bcrypt.hash(password, 10);
+
+//         // Create the unit with the hashed password
+//         const unit = await printingPressunit.create({
+//             name, email, phone, whatsapp, address, role,
+//             password: hashedPassword
+//         });
+
+//         // Convert Mongoose doc to plain object to delete password
+//         const unitObject = unit.toObject();
+//         delete unitObject.password;
+//         const payload = {
+//             shopId: unit._id,
+//             role: unit.role
+//         }
+//         generateToken(res, payload)
+
+//         res.status(201).json({ data: unitObject, message: 'Printing unit created successfully' });
+//     } catch (err) {
+//         res.status(400).json({ error: err.message });
+//     }
+// };
+
+
 const createPrintingUnit = async (req, res) => {
     try {
         const { name, email, password, phone, whatsapp, address, role } = req.body;
@@ -11,26 +40,33 @@ const createPrintingUnit = async (req, res) => {
         // Hash the password
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Create the unit with the hashed password
+        // Create the unit with approval set to false by default
         const unit = await printingPressunit.create({
-            name, email, phone, whatsapp, address, role,
-            password: hashedPassword
+            name,
+            email,
+            phone,
+            whatsapp,
+            address,
+            role,
+            password: hashedPassword,
+            approval: false, // <- Add this line to enforce workflow
         });
 
-        // Convert Mongoose doc to plain object to delete password
+        // Remove password before sending response
         const unitObject = unit.toObject();
         delete unitObject.password;
-        const payload = {
-            shopId: unit._id,
-            role: unit.role
-        }
-        generateToken(res, payload)
 
-        res.status(201).json({ data: unitObject, message: 'Printing unit created successfully' });
+        // No token generation at registration because approval is pending
+        res.status(201).json({
+            data: unitObject,
+            message: 'Registration successful. Awaiting admin approval.'
+        });
     } catch (err) {
         res.status(400).json({ error: err.message });
     }
 };
+
+
 
 // Get all printing units 
 
