@@ -35,7 +35,9 @@ const printingUnitSchema = new mongoose.Schema({
   verified: {
     type: Boolean,
     default: false
-  }
+  },
+   // verification by superadmin (approval to login)
+  approval: { type: Boolean, default: false },
 }, { timestamps: true });
 
 export const printingPressunit = mongoose.model('PrintingPressunit', printingUnitSchema);

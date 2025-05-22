@@ -1,34 +1,48 @@
 import { useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "../slices/authSlice";
-// import { useShopLoginMutation } from "../slices/shopSlice";
 import { useShoploginMutation } from "../slices/shopSlice";
-import { Link } from "react-router-dom";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 
 function ShopLogin() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [form, setForm] = useState({ email: "", password: "" });
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const redirect = searchParams.get("redirect") || "/admin";
-  const [showPassword, setShowPassword] = useState(false);
 
   const [ShopLogin] = useShoploginMutation();
 
+  // Handle form input changes
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  // Handle form submit
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
 
     try {
-      const res = await ShopLogin({ email, password }).unwrap();
-      dispatch(setCredentials({ ...res }));
-      navigate(redirect);
+      // Call the login API mutation
+      const res = await ShopLogin(form).unwrap();
+      dispatch(setCredentials(res.user)); // Store user in redux state
+      navigate(redirect); // Redirect after successful login
     } catch (err) {
-      setError(err?.data?.message || "Login failed! Please try again.");
+      // Handle different error cases from backend validation
+      if (err?.data?.approval) {
+        setError("Your account is not approved yet. Please wait.");
+      } else if (err?.data?.email) {
+        setError("Email not found.");
+      } else if (err?.data?.password) {
+        setError("Incorrect password.");
+      } else {
+        setError("Login failed. Please try again.");
+      }
     }
   };
 
@@ -40,19 +54,11 @@ function ShopLogin() {
       <h1 className="text-gray-900 text-3xl mt-10 font-medium">Shop Login</h1>
       <p className="text-gray-500 text-sm mt-2">Please sign in to continue</p>
 
-      {error && (
-        <p className="text-red-500 text-sm mt-4 text-center">{error}</p>
-      )}
+      {error && <p className="text-red-500 text-sm mt-4 text-center">{error}</p>}
 
+      {/* Email Input */}
       <div className="flex items-center w-full mt-10 bg-white border border-gray-300/80 h-12 rounded-full overflow-hidden pl-6 gap-2">
-        {/* Email Icon */}
-        <svg
-          width="16"
-          height="11"
-          viewBox="0 0 16 11"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
+        <svg width="16" height="11" fill="none" aria-hidden="true">
           <path
             fillRule="evenodd"
             clipRule="evenodd"
@@ -60,35 +66,21 @@ function ShopLogin() {
             fill="#6B7280"
           />
         </svg>
-
         <input
           type="email"
+          name="email"
           placeholder="Email id"
           className="bg-transparent text-gray-500 placeholder-gray-500 outline-none text-sm w-full h-full"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          value={form.email}
+          onChange={handleChange}
           required
+          aria-label="Email"
         />
       </div>
 
-      {/* <div className="flex items-center mt-4 w-full bg-white border border-gray-300/80 h-12 rounded-full overflow-hidden pl-6 gap-2"> */}
-      {/* Password Icon */}
-      {/* <svg
-          width="13"
-          height="17"
-          viewBox="0 0 13 17"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg" */}
-      {/* > */}
-      {/* <path
-            d="M13 8.5c0-.938-.729-1.7-1.625-1.7h-.812V4.25C10.563 1.907 8.74 0 6.5 0S2.438 1.907 2.438 4.25V6.8h-.813C.729 6.8 0 7.562 0 8.5v6.8c0 .938.729 1.7 1.625 1.7h9.75c.896 0 1.625-.762 1.625-1.7zM4.063 4.25c0-1.406 1.093-2.55 2.437-2.55s2.438 1.144 2.438 2.55V6.8H4.061z"
-            fill="#6B7280"
-          />
-        </svg> */}
-
-      {/* Password Field with Eye Toggle */}
+      {/* Password Input */}
       <div className="relative flex items-center mt-4 w-full bg-white border border-gray-300/80 h-12 rounded-full overflow-hidden pl-6 gap-2">
-        <svg width="13" height="17" viewBox="0 0 13 17" fill="none">
+        <svg width="13" height="17" fill="none" aria-hidden="true">
           <path
             d="M13 8.5c0-.938-.729-1.7-1.625-1.7h-.812V4.25C10.563 1.907 8.74 0 6.5 0S2.438 1.907 2.438 4.25V6.8h-.813C.729 6.8 0 7.562 0 8.5v6.8c0 .938.729 1.7 1.625 1.7h9.75c.896 0 1.625-.762 1.625-1.7zM4.063 4.25c0-1.406 1.093-2.55 2.437-2.55s2.438 1.144 2.438 2.55V6.8H4.061z"
             fill="#6B7280"
@@ -96,25 +88,28 @@ function ShopLogin() {
         </svg>
         <input
           type={showPassword ? "text" : "password"}
+          name="password"
           placeholder="Password"
           className="bg-transparent text-gray-500 placeholder-gray-500 outline-none text-sm w-full h-full pr-10"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          value={form.password}
+          onChange={handleChange}
           required
+          aria-label="Password"
         />
-        {/* Eye Icon */}
-        <span
+        <button
+          type="button"
           onClick={() => setShowPassword((prev) => !prev)}
-          className="absolute right-4 text-gray-500 cursor-pointer"
+          className="absolute right-4 text-gray-500 cursor-pointer focus:outline-none"
+          aria-label={showPassword ? "Hide password" : "Show password"}
         >
           {showPassword ? <FiEyeOff /> : <FiEye />}
-        </span>
+        </button>
       </div>
 
       <div className="mt-5 text-left text-indigo-500">
-        <a className="text-sm hover:underline" href="#">
+        <Link to="/forgot-password" className="text-sm hover:underline">
           Forgot password?
-        </a>
+        </Link>
       </div>
 
       <button
@@ -126,8 +121,7 @@ function ShopLogin() {
 
       <p className="text-gray-500 text-sm mt-3 mb-11">
         Don’t have an account?{" "}
-        <Link to="/register-shop"
-          className="text-indigo-500 hover:underline" href="#">
+        <Link to="/register-shop" className="text-indigo-500 hover:underline">
           Sign up
         </Link>
       </p>
