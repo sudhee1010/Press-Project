@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createPrintingUnit, getAllUnits,getUnitById,deleteUnit,signin, verifyPrintingUnit,adminLogout,adminupdateUnit} from "../controller/printingPressunitcontroller.js";
+import { createPrintingUnit, getAllUnits,getUnitById,deleteUnit,signin, verifyPrintingUnit,adminLogout,adminupdateUnit,rejectPrintingUnit} from "../controller/printingPressunitcontroller.js";
 import authorizeRoles from "../middleware/authMiddleware.js";
 import authenticateToken from "../middleware/authenticateToken.js";
 
@@ -14,6 +14,7 @@ printingUnitRouter.route("/signin").post(signin);
 printingUnitRouter.route('/:id/verify').put(authenticateToken, authorizeRoles('superadmin'), verifyPrintingUnit);
 printingUnitRouter.route('/adminlogout').post(authenticateToken, authorizeRoles('admin'),adminLogout);
 printingUnitRouter.route("/adminupdateunit").put(adminupdateUnit);
+printingUnitRouter.route('/:id/reject').put(authenticateToken, authorizeRoles('superadmin'), rejectPrintingUnit); 
 
 
 export default printingUnitRouter;

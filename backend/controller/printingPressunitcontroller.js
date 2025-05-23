@@ -282,8 +282,25 @@ const adminupdateUnit = async (req, res) => {
     }
 };
 
+// Reject (or deactivate) a printing unit (superadmin only)
+const rejectPrintingUnit = async (req, res) => {
+  try {
+    const unit = await printingPressunit.findById(req.params.id);
+    if (!unit) {
+      return res.status(404).json({ message: 'Printing unit not found' });
+    }
+
+    unit.approval = false;   // ensure not approved
+    unit.rejected = true;    // custom field to mark as rejected
+    await unit.save();
+
+    res.status(200).json({ message: 'Printing unit rejected successfully', data: unit });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
 
 
 
 
-export { createPrintingUnit, getAllUnits, getUnitById,deleteUnit, signin, verifyPrintingUnit, adminLogout,adminupdateUnit };
+export { createPrintingUnit, getAllUnits, getUnitById,deleteUnit, signin, verifyPrintingUnit, adminLogout,adminupdateUnit ,rejectPrintingUnit};
