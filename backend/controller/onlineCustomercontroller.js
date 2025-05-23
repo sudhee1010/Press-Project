@@ -14,15 +14,24 @@ const onlineSignup = async (req, res) => {
     const { errors, isValid } = signupValidation(req.body);
 
     try {
+        // if (!isValid) {
+        //     return res.status(400).json(errors);
+        // }
         if (!isValid) {
-            return res.status(400).json(errors);
+            const firstError = Object.values(errors)[0];
+            return res.status(400).json({ message: firstError || "Invalid input" });
         }
 
+
         const exist = await OnlineCustomer.findOne({ email });
+        // if (exist) {
+        //     errors.email = "Email already registered";
+        //     return res.status(400).json(errors);
+        // }
         if (exist) {
-            errors.email = "Email already registered";
-            return res.status(400).json(errors);
+            return res.status(400).json({ message: "Email is already registered" });
         }
+
 
         const result = await OnlineCustomer.create({
             name,
@@ -308,4 +317,4 @@ const resetPassword = async (req, res) => {
 
 
 
-export { onlineSignup, onlineSignin, onlineCustomerProfile, uploadFile, onlineLogout, getCustomersByShop, updateOnlineCustomer, getAllOnlineCustomers, deleteCustomer, changeOnlineCustomerPassword, getOnlineCustomerOrders, getOnlineCustomerProfile,requestPasswordReset,resetPassword };
+export { onlineSignup, onlineSignin, onlineCustomerProfile, uploadFile, onlineLogout, getCustomersByShop, updateOnlineCustomer, getAllOnlineCustomers, deleteCustomer, changeOnlineCustomerPassword, getOnlineCustomerOrders, getOnlineCustomerProfile, requestPasswordReset, resetPassword };
