@@ -139,7 +139,7 @@ import { useState } from "react";
 import { useShopRegisterMutation } from "../slices/shopSlice.js";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { setCredentials } from "../slices/authSlice";
+// import { setCredentials } from "../slices/authSlice";
 
 function RegisterShop() {
   // const [name, setName] = useState("");
@@ -197,8 +197,8 @@ function RegisterShop() {
   const [success, setSuccess] = useState(false);
   // const [searchParams] = useSearchParams();
   // const redirect = searchParams.get("redirect") || "/admin";
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+  // const dispatch = useDispatch();
+  // const navigate = useNavigate();
   const [ShopRegister] = useShopRegisterMutation();
 
   const handleChange = (e) => {
