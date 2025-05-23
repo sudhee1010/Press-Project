@@ -6,7 +6,7 @@ export const ShopApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     Shoplogin: builder.mutation({
       query: (data) => ({
-        url: `${SHOP_URL}/auth`,
+        url: `${SHOP_URL}/signin`,
         method: "POST",
         body: data,
       }),
@@ -20,8 +20,36 @@ export const ShopApiSlice = apiSlice.injectEndpoints({
     }),
     logoutShop: builder.mutation({
       query: () => ({
-        url: `${USERS_URL}/logout`,
+        url: `${USERS_URL}/adminlogout`,
         method: "POST",
+      }),
+    }),
+        // Add get all units
+    getAllUnits: builder.query({
+      query: () => ({
+        url: `${SHOP_URL}/getallunits`,
+      }),
+      keepUnusedDataFor: 5,
+    }),
+    // Add verify unit
+    verifyUnit: builder.mutation({
+      query: (id) => ({
+        url: `${SHOP_URL}/${id}/verify`,
+        method: "PUT",
+      }),
+    }),
+    // Add reject unit
+    rejectUnit: builder.mutation({
+      query: (id) => ({
+        url: `${SHOP_URL}/${id}/reject`,
+        method: "PUT",
+      }),
+    }),
+    // Add delete unit
+    deleteUnit: builder.mutation({
+      query: (id) => ({
+        url: `${SHOP_URL}/deleteunit/${id}`,
+        method: "DELETE",
       }),
     }),
     ShopProfile: builder.mutation({
@@ -62,12 +90,16 @@ export const ShopApiSlice = apiSlice.injectEndpoints({
 });
 
 export const {
-  useLoginMutation,
+  useShoploginMutation,
   useShopRegisterMutation,
-  useLogoutMutation,
+  useLogoutShopMutation,
   useProfileMutation,
   useGetUsersQuery,
   useDeleteUserMutation,
   useGetUserDetailsQuery,
   useUpdateUserMutation,
+  useGetAllUnitsQuery,
+  useVerifyUnitMutation,
+  useRejectUnitMutation,
+  useDeleteUnitMutation,
 } = ShopApiSlice;

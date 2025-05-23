@@ -82,9 +82,11 @@ const Header = () => {
             <circle cx="11" cy="11" r="8" />
             <line x1="21" y1="21" x2="16.65" y2="16.65" />
           </svg> */}
-          <button className="bg-white text-black px-4 py-2 rounded-md ml-4 transition-all duration-500">
-            Work with Us
-          </button>
+          <Link to="/register-shop">
+            <button className="bg-white text-black px-4 py-2 rounded-md ml-4 transition-all duration-500 cursor-pointer hover:text-gray-500">
+              Work with Us
+            </button>
+          </Link>
           <button className="bg-white text-black border border-gray-300 px-4 py-2 rounded-md ml-4 transition-all duration-500">
             Login
           </button>

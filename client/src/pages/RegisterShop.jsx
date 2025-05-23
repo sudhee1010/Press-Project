@@ -137,7 +137,7 @@
 
 import { useState } from "react";
 import { useShopRegisterMutation } from "../slices/shopSlice.js";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "../slices/authSlice";
 
@@ -194,8 +194,9 @@ function RegisterShop() {
   });
 
   const [error, setError] = useState("");
-  const [searchParams] = useSearchParams();
-  const redirect = searchParams.get("redirect") || "/admin";
+  const [success, setSuccess] = useState(false);
+  // const [searchParams] = useSearchParams();
+  // const redirect = searchParams.get("redirect") || "/admin";
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [ShopRegister] = useShopRegisterMutation();
@@ -207,13 +208,16 @@ function RegisterShop() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    setError("");
+    setSuccess(false);
+
     if (form.password !== form.confirmPassword) {
       setError("Passwords do not match");
       return;
     }
 
     try {
-      const res = await ShopRegister({
+      await ShopRegister({
         name: form.name,
         email: form.email,
         password: form.password,
@@ -222,10 +226,21 @@ function RegisterShop() {
         address: form.address,
       }).unwrap();
 
-      dispatch(setCredentials({ ...res }));
-      navigate(redirect);
+      // dispatch(setCredentials({ ...res }));
+      // navigate("/admin");
+
+      setSuccess(true);
+      setForm({
+        name: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+        phone: "",
+        whatsapp: "",
+        address: "",
+      });
     } catch (error) {
-      setError(error?.data?.message || "Registration failed!");
+      setError(error?.data?.error || "Registration failed!");
       console.log(error, "error");
     }
   };
@@ -242,6 +257,12 @@ function RegisterShop() {
 
       {error && (
         <p className="text-red-500 text-sm mb-4 text-center">{error}</p>
+      )}
+      {success && (
+        <p className="text-green-600">
+          Registration successful! Please wait for admin approval before logging
+          in.
+        </p>
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -325,9 +346,9 @@ function RegisterShop() {
 
       <p className="text-gray-500 text-sm mt-4 mb-10">
         Already have an account?{" "}
-        <a href="/login" className="text-indigo-500 hover:underline">
+        <Link to="login-shop" className="text-indigo-500 hover:underline">
           Login
-        </a>
+        </Link>
       </p>
     </form>
   );
