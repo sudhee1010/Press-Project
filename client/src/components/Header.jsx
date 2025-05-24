@@ -31,13 +31,6 @@ const Header = () => {
       >
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2">
-          {/* <img
-            src={
-              "https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/dummyLogo/dummyLogoWhite.svg"
-            }
-            alt="logo"
-            className={`h-9 ${isScrolled && "invert opacity-80"}`}
-          /> */}
           <h1 className="text-indigo-500 font-extrabold text-3xl">
             PrintPress
           </h1>
@@ -61,38 +54,27 @@ const Header = () => {
               />
             </Link>
           ))}
-          {/* <button
-            className={`border px-4 py-1 text-sm font-light rounded-full cursor-pointer ${
-              isScrolled ? "text-black" : "text-gray-700"
-            } transition-all`}
-          >
-            New Launch
-          </button> */}
         </div>
 
         {/* Desktop Right */}
         <div className="hidden md:flex items-center gap-4">
-          {/* <svg
-            className={`h-6 w-6 ${isScrolled ? "invert" : ""}`}
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            viewBox="0 0 24 24"
-          >
-            <circle cx="11" cy="11" r="8" />
-            <line x1="21" y1="21" x2="16.65" y2="16.65" />
-          </svg> */}
           <Link to="/register-shop">
             <button className="bg-white text-black px-4 py-2 rounded-md ml-4 transition-all duration-500 cursor-pointer hover:text-gray-500">
               Work with Us
             </button>
           </Link>
-          <button className="bg-white text-black border border-gray-300 px-4 py-2 rounded-md ml-4 transition-all duration-500">
-            Login
-          </button>
-          <button className="bg-indigo-500 text-white px-4 py-2 rounded-md ml-4 transition-all duration-500">
-            SignUp
-          </button>
+
+          <Link to="/login-customer">
+            <button className="bg-white text-black border cursor-pointer border-gray-300 px-4 py-2 rounded-md ml-4 transition-all duration-500 hover:bg-gray-100 hover:text-black">
+              Login
+            </button>
+          </Link>
+
+          <Link to="/register-customer">
+            <button className="bg-indigo-500 text-white cursor-pointer px-4 py-2 rounded-md ml-4 transition-all duration-500 hover:bg-indigo-600">
+              SignUp
+            </button>
+          </Link>
         </div>
 
         {/* Mobile Menu Button */}
@@ -139,15 +121,23 @@ const Header = () => {
             </Link>
           ))}
 
-          <button className="bg-white text-black px-4 py-2 rounded-md ml-4 transition-all duration-500">
-            Work with Us
-          </button>
-          <button className="bg-white text-black border border-gray-300 px-4 py-2 rounded-md ml-4 transition-all duration-500">
-            Login
-          </button>
-          <button className="bg-indigo-500 text-white px-4 py-2 rounded-md ml-4 transition-all duration-500">
-            SignUp
-          </button>
+          <Link to="/register-shop">
+            <button className="bg-white text-black px-4 py-2 rounded-md ml-4 transition-all duration-500">
+              Work with Us
+            </button>
+          </Link>
+
+          <Link to="/login-customer">
+            <button className="bg-white text-black border cursor-pointer border-gray-300 px-4 py-2 rounded-md ml-4 transition-all duration-500 hover:bg-gray-100 hover:text-black">
+              Login
+            </button>
+          </Link>
+
+          <Link to="/register-customer">
+            <button className="bg-indigo-500 text-white cursor-pointer px-4 py-2 rounded-md ml-4 transition-all duration-500 hover:bg-indigo-600">
+              SignUp
+            </button>
+          </Link>
         </div>
       </nav>
     </>

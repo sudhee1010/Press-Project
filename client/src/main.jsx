@@ -21,6 +21,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import OnlineCustomerRegisterPage from "./pages/OnlineCustomerRegisterPage";
 import ShopApprovalList from "./pages/ShopApprovalList";
 import ThankYou from "./pages/Thankyou";
+import { roleGuard } from "../utils/roleGuard";
 
 /*
 // Public Pages
@@ -82,7 +83,7 @@ const router = createBrowserRouter([
   {
     path: "/admin",
     element: <DashboardLayout />,
-    // loader: adminLoader,
+    loader: () => roleGuard(["admin"]),
     children: [
       { index: true, element: <AdminDashboard /> },
       // { path: 'orders', element: <AdminOrders /> },
