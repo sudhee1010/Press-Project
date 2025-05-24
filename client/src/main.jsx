@@ -19,6 +19,7 @@ import RegisterShop from "./pages/RegisterShop";
 import ShopLogin from "./pages/ShopLogin";
 import AdminDashboard from "./pages/AdminDashboard";
 import OnlineCustomerRegisterPage from "./pages/OnlineCustomerRegisterPage";
+import ShopApprovalList from "./pages/ShopApprovalList";
 
 /*
 // Public Pages
@@ -66,6 +67,7 @@ const router = createBrowserRouter([
       { path: "register-customer", element: <OnlineCustomerRegisterPage /> },
       { path: "register-shop", element: <RegisterShop /> },
       { path: "login-shop", element: <ShopLogin /> },
+      { path: "shop-list", element: <ShopApprovalList /> },
       // { path: 'forgot-password', element: <ForgotPassword /> },
       // { path: 'reset-password/:token', element: <ResetPassword /> },
       // { path: 'terms', element: <Terms /> },
