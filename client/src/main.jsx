@@ -16,6 +16,12 @@ import store from "./store";
 import { Provider } from "react-redux";
 import CustomerLogin from "./pages/CustomerLogin";
 import RegisterShop from "./pages/RegisterShop";
+import ShopLogin from "./pages/ShopLogin";
+import AdminDashboard from "./pages/AdminDashboard";
+import OnlineCustomerRegisterPage from "./pages/OnlineCustomerRegisterPage";
+import ShopApprovalList from "./pages/ShopApprovalList";
+import ThankYou from "./pages/Thankyou";
+import { roleGuard } from "../utils/roleGuard";
 
 /*
 // Public Pages
@@ -60,8 +66,11 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <LandingPage /> },
       { path: "login-customer", element: <CustomerLogin /> },
-      // { path: 'register-customer', element: <CustomerRegister /> },
+      { path: "register-customer", element: <OnlineCustomerRegisterPage /> },
       { path: "register-shop", element: <RegisterShop /> },
+      { path: "login-shop", element: <ShopLogin /> },
+      { path: "shop-list", element: <ShopApprovalList /> },
+      { path: "thank-you", element: <ThankYou /> },
       // { path: 'forgot-password', element: <ForgotPassword /> },
       // { path: 'reset-password/:token', element: <ResetPassword /> },
       // { path: 'terms', element: <Terms /> },
@@ -74,9 +83,9 @@ const router = createBrowserRouter([
   {
     path: "/admin",
     element: <DashboardLayout />,
-    // loader: adminLoader,
+    loader: () => roleGuard(["admin"]),
     children: [
-      // { index: true, element: <AdminDashboard /> },
+      { index: true, element: <AdminDashboard /> },
       // { path: 'orders', element: <AdminOrders /> },
       { path: "register", element: <RegisterEmploye /> },
       // { path: 'customers', element: <CustomerList /> },

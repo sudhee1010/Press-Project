@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "../slices/authSlice";
 import { useCustomerLoginMutation } from "../slices/onlineSlice";
@@ -16,15 +16,47 @@ function CustomerLogin() {
 
   const [login] = useCustomerLoginMutation();
 
+  const validateInputs = () => {
+    if (!email || !/\S+@\S+\.\S+/.test(email)) {
+      setError("Please enter a valid email address.");
+      return false;
+    }
+
+    if (
+      !password ||
+      password.length < 8 ||
+      !/[A-Z]/.test(password) ||
+      !/[a-z]/.test(password) ||
+      !/[0-9]/.test(password)
+    ) {
+      setError("Password must be at least 8 characters long and include uppercase, lowercase, and a number.");
+      return false;
+    }
+
+    return true;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
+
+    // Client-side validation
+    if (!validateInputs()) return;
 
     try {
       const res = await login({ email, password }).unwrap();
       dispatch(setCredentials({ ...res }));
       navigate(redirect);
     } catch (err) {
-      setError(err?.data?.message || "Login failed! Please try again.");
+      const message = err?.data?.message?.toLowerCase() || err?.error?.toLowerCase() || "";
+
+      if (message.includes("email") || message.includes("not found")) {
+        setError("We cannot find an account with that email address.");
+      } else if (message.includes("password") || message.includes("incorrect")) {
+        setError("Your password is incorrect.");
+      } else {
+        setError("There was a problem logging in. Please try again.");
+      }
     }
   };
 
@@ -41,7 +73,6 @@ function CustomerLogin() {
       )}
 
       <div className="flex items-center w-full mt-10 bg-white border border-gray-300/80 h-12 rounded-full overflow-hidden pl-6 gap-2">
-        {/* Email Icon */}
         <svg
           width="16"
           height="11"
@@ -68,7 +99,6 @@ function CustomerLogin() {
       </div>
 
       <div className="flex items-center mt-4 w-full bg-white border border-gray-300/80 h-12 rounded-full overflow-hidden pl-6 gap-2">
-        {/* Password Icon */}
         <svg
           width="13"
           height="17"
@@ -107,9 +137,9 @@ function CustomerLogin() {
 
       <p className="text-gray-500 text-sm mt-3 mb-11">
         Don’t have an account?{" "}
-        <a className="text-indigo-500 hover:underline" href="#">
+        <Link to="/register-customer" className="text-indigo-500 hover:underline">
           Sign up
-        </a>
+        </Link>
       </p>
     </form>
   );
