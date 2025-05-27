@@ -22,6 +22,7 @@ import OnlineCustomerRegisterPage from "./pages/OnlineCustomerRegisterPage";
 import ShopApprovalList from "./pages/ShopApprovalList";
 import ThankYou from "./pages/Thankyou";
 import { roleGuard } from "../utils/roleGuard";
+import roleRedirectLoader from "../utils/roleRedirectLoader";
 
 /*
 // Public Pages
@@ -62,6 +63,7 @@ import CustomerSupport from "./pages/customer/CustomerSupport";
 const router = createBrowserRouter([
   {
     path: "/",
+    loader: roleRedirectLoader,
     element: <PublicLayout />,
     children: [
       { index: true, element: <LandingPage /> },
