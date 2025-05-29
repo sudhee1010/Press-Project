@@ -90,7 +90,7 @@ const router = createBrowserRouter([
     loader: () => roleGuard(["admin"]),
     children: [
       { index: true, element: <AdminDashboard /> },
-      // { path: 'orders', element: <AdminOrders /> },
+      //  { path: 'orders', element: <WalkInOrderForm/> },
       { path: "register", element: <RegisterEmploye /> },
 
       // { path: 'customers', element: <CustomerList /> },
