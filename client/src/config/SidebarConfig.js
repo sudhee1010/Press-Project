@@ -7,7 +7,7 @@ export const sidebars = {
   admin: [
     { label: "Dashboard", path: "/admin" },
     { label: "Register", path: "/admin/register" },
-    { label: "Orders", path: "/admin/orders" },
+    { label: "Create order", path: "/admin/create-order" },
     { label: "Payments", path: "/admin/payments" },
   ],
   designer: [

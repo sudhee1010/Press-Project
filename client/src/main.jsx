@@ -24,6 +24,7 @@ import ShopApprovalList from "./pages/ShopApprovalList";
 import ThankYou from "./pages/Thankyou";
 import { roleGuard } from "../utils/roleGuard";
 import roleRedirectLoader from "../utils/roleRedirectLoader";
+import WalkInOrderForm from "./pages/WalkInOrderForm";
 
 /*
 // Public Pages
@@ -92,6 +93,7 @@ const router = createBrowserRouter([
       { index: true, element: <AdminDashboard /> },
       //  { path: 'orders', element: <WalkInOrderForm/> },
       { path: "register", element: <RegisterEmploye /> },
+      { path: "create-order", element: <WalkInOrderForm /> },
 
       // { path: 'customers', element: <CustomerList /> },
       // { path: 'tokens', element: <TokenManagement /> },
