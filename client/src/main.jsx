@@ -22,6 +22,7 @@ import OnlineCustomerRegisterPage from "./pages/OnlineCustomerRegisterPage";
 import ShopApprovalList from "./pages/ShopApprovalList";
 import ThankYou from "./pages/Thankyou";
 import { roleGuard } from "../utils/roleGuard";
+import WalkInOrderForm from "./pages/WalkInOrderForm";
 
 /*
 // Public Pages
@@ -86,7 +87,7 @@ const router = createBrowserRouter([
     loader: () => roleGuard(["admin"]),
     children: [
       { index: true, element: <AdminDashboard /> },
-      // { path: 'orders', element: <AdminOrders /> },
+      //  { path: 'orders', element: <WalkInOrderForm/> },
       { path: "register", element: <RegisterEmploye /> },
       // { path: 'customers', element: <CustomerList /> },
       // { path: 'tokens', element: <TokenManagement /> },
