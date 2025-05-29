@@ -12,6 +12,7 @@ import PublicLayout from "./layouts/PublicLayout";
 import DashboardLayout from "./layouts/DashboardLayout";
 import LandingPage from "./pages/LandingPage";
 import RegisterEmploye from "./pages/RegisterEmploye";
+import LoginEmployee from "./pages/LoginEmployee";
 import store from "./store";
 import { Provider } from "react-redux";
 import CustomerLogin from "./pages/CustomerLogin";
@@ -22,7 +23,7 @@ import OnlineCustomerRegisterPage from "./pages/OnlineCustomerRegisterPage";
 import ShopApprovalList from "./pages/ShopApprovalList";
 import ThankYou from "./pages/Thankyou";
 import { roleGuard } from "../utils/roleGuard";
-import WalkInOrderForm from "./pages/WalkInOrderForm";
+import roleRedirectLoader from "../utils/roleRedirectLoader";
 
 /*
 // Public Pages
@@ -63,6 +64,7 @@ import CustomerSupport from "./pages/customer/CustomerSupport";
 const router = createBrowserRouter([
   {
     path: "/",
+    loader: roleRedirectLoader,
     element: <PublicLayout />,
     children: [
       { index: true, element: <LandingPage /> },
@@ -70,6 +72,7 @@ const router = createBrowserRouter([
       { path: "register-customer", element: <OnlineCustomerRegisterPage /> },
       { path: "register-shop", element: <RegisterShop /> },
       { path: "login-shop", element: <ShopLogin /> },
+      { path: "login-employee", element: <LoginEmployee /> },
       { path: "shop-list", element: <ShopApprovalList /> },
       { path: "thank-you", element: <ThankYou /> },
       // { path: 'forgot-password', element: <ForgotPassword /> },
@@ -89,6 +92,7 @@ const router = createBrowserRouter([
       { index: true, element: <AdminDashboard /> },
       //  { path: 'orders', element: <WalkInOrderForm/> },
       { path: "register", element: <RegisterEmploye /> },
+
       // { path: 'customers', element: <CustomerList /> },
       // { path: 'tokens', element: <TokenManagement /> },
       // { path: 'employees', element: <ManageEmployees /> },
