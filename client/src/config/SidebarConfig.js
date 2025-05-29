@@ -5,10 +5,10 @@ export const sidebars = {
     { label: "Employees", path: "/superadmin/employees" },
   ],
   admin: [
-    { label: "Dashboard", path: "/admin" },
+    // { label: "Dashboard", path: "/admin" },
     { label: "Register", path: "/admin/register" },
     { label: "Create order", path: "/admin/create-order" },
-    { label: "Payments", path: "/admin/payments" },
+    // { label: "Payments", path: "/admin/payments" },
   ],
   designer: [
     { label: "Design Orders", path: "/designer/orders" },
