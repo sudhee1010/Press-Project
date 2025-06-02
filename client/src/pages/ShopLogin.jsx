@@ -75,17 +75,23 @@ function ShopLogin() {
       dispatch(setCredentials(res.user));
       navigate(redirect);
     } catch (err) {
-      console.error(err);
-      if (err?.data?.approval) {
-        setError("Your account is not approved yet. Please wait.");
-      } else if (err?.data?.email) {
-        setError("Email not found.");
-      } else if (err?.data?.password) {
-        setError("Incorrect password.");
-      } else {
-        setError("Login failed. Please try again.");
-      }
-    }
+  console.log("Login error:", err);
+
+  const backendErrors = err?.data?.errors || {};
+  const message = err?.data?.message || "";
+
+  if (backendErrors.approval) {
+    setError("Your account is not approved yet. Please wait.");
+  } else if (backendErrors.email) {
+    setError("Email not found.");
+  } else if (backendErrors.password) {
+    setError("Incorrect password.");
+  } else if (message.includes("not approved")) {
+    setError("Your account is not approved yet. Please wait.");
+  } else {
+    setError("Login failed. Please try again.");
+  }
+}
   };
 
   // const inputClass = (field) =>
