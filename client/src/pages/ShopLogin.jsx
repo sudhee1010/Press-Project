@@ -13,6 +13,15 @@ function ShopLogin() {
   const [error, setError] = useState("");
   const [touched, setTouched] = useState({});
 
+  const [passwordCriteria, setPasswordCriteria] = useState({
+    length: false,
+    lowercase: false,
+    uppercase: false,
+    number: false,
+    specialChar: false,
+  });
+
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -29,18 +38,19 @@ function ShopLogin() {
 
     if (!password) {
       newErrors.password = "Password is required";
-    } else {
-      if (password.length < 10)
-        newErrors.password = "Password must be at least 10 characters";
-      else if (!/[a-z]/.test(password))
-        newErrors.password = "Password must include a lowercase letter";
-      else if (!/[A-Z]/.test(password))
-        newErrors.password = "Password must include an uppercase letter";
-      else if (!/\d/.test(password))
-        newErrors.password = "Password must include a number";
-      else if (!/[@$!%*?&]/.test(password))
-        newErrors.password = "Password must include a special character (@$!%*?&)";
     }
+    // } else {
+    //   if (password.length < 10)
+    //     newErrors.password = "Password must be at least 10 characters";
+    //   else if (!/[a-z]/.test(password))
+    //     newErrors.password = "Password must include a lowercase letter";
+    //   else if (!/[A-Z]/.test(password))
+    //     newErrors.password = "Password must include an uppercase letter";
+    //   else if (!/\d/.test(password))
+    //     newErrors.password = "Password must include a number";
+    //   else if (!/[@$!%*?&]/.test(password))
+    //     newErrors.password = "Password must include a special character (@$!%*?&)";
+    // }
 
     return newErrors;
   };
@@ -51,8 +61,23 @@ function ShopLogin() {
     }
   }, [form, touched]);
 
+  const checkPasswordCriteria = (password) => {
+    setPasswordCriteria({
+      length: password.length >= 10,
+      lowercase: /[a-z]/.test(password),
+      uppercase: /[A-Z]/.test(password),
+      number: /\d/.test(password),
+      specialChar: /[@$!%*?&]/.test(password),
+    });
+  };
+
+
+
   const handleChange = ({ target: { name, value } }) => {
     setForm((prev) => ({ ...prev, [name]: value }));
+    if (name === "password") {
+      checkPasswordCriteria(value);
+    }
   };
 
   const handleBlur = (e) => {
@@ -75,23 +100,23 @@ function ShopLogin() {
       dispatch(setCredentials(res.user));
       navigate(redirect);
     } catch (err) {
-  console.log("Login error:", err);
+      console.log("Login error:", err);
 
-  const backendErrors = err?.data?.errors || {};
-  const message = err?.data?.message || "";
+      const backendErrors = err?.data?.errors || {};
+      const message = err?.data?.message || "";
 
-  if (backendErrors.approval) {
-    setError("Your account is not approved yet. Please wait.");
-  } else if (backendErrors.email) {
-    setError("Email not found.");
-  } else if (backendErrors.password) {
-    setError("Incorrect password.");
-  } else if (message.includes("not approved")) {
-    setError("Your account is not approved yet. Please wait.");
-  } else {
-    setError("Login failed. Please try again.");
-  }
-}
+      if (backendErrors.approval) {
+        setError("Your account is not approved yet. Please wait.");
+      } else if (backendErrors.email) {
+        setError("Email not found.");
+      } else if (backendErrors.password) {
+        setError("Incorrect password.");
+      } else if (message.includes("not approved")) {
+        setError("Your account is not approved yet. Please wait.");
+      } else {
+        setError("Login failed. Please try again.");
+      }
+    }
   };
 
   // const inputClass = (field) =>
@@ -160,7 +185,32 @@ function ShopLogin() {
           </button>
         </div>
         {errorText("password")}
+
+        {/* Password criteria display */}
+        {form.password && (
+          <div className="bg-gray-50 p-3 mt-2 rounded-md text-left border text-xs">
+            <ul className="space-y-1">
+              <li className={passwordCriteria.length ? "text-green-600" : "text-gray-400"}>
+                • At least 10 characters
+              </li>
+              <li className={passwordCriteria.lowercase ? "text-green-600" : "text-gray-400"}>
+                • Contains lowercase letter
+              </li>
+              <li className={passwordCriteria.uppercase ? "text-green-600" : "text-gray-400"}>
+                • Contains uppercase letter
+              </li>
+              <li className={passwordCriteria.number ? "text-green-600" : "text-gray-400"}>
+                • Contains number
+              </li>
+              <li className={passwordCriteria.specialChar ? "text-green-600" : "text-gray-400"}>
+                • Contains special character (@$!%*?&)
+              </li>
+            </ul>
+          </div>
+        )}
       </div>
+
+
 
 
       <div className="mt-5 text-left text-indigo-500">
