@@ -191,9 +191,13 @@ const signin = async (req, res) => {
     }
 
     // Check approval
-    if (!user.approval) {
-      return res.status(403).json({ errors: { approval: "Account not approved yet." } });
-    }
+   if (!user.approval) {
+  return res.status(403).json({
+    errors: { approval: "Account not approved yet." },
+    message: "Account not approved yet."
+  });
+}
+
 
     // Compare passwords
     const isMatch = await bcrypt.compare(password, user.password);
