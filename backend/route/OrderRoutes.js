@@ -1,12 +1,12 @@
 import express from "express";
-import { createOrder, getAllOrders, getOrderById, updateOrder, deleteOrder } from "../controller/orderController.js";
+import { CreateOrder, getAllOrders, getOrderById, updateOrder, deleteOrder } from "../controller/orderController.js";
 import authenticateToken from "../middleware/authenticateToken.js"
 import authorizeRoles from "../middleware/authMiddleware.js";
 
 const orderRouter = express.Router();
 
 // Create a new order (Receptionist/Admin)
-orderRouter.route("/createOrder").post(authenticateToken,authorizeRoles('admin'), createOrder);
+orderRouter.route("/CreateOrder").post(authenticateToken,authorizeRoles('admin'), CreateOrder);
 
 // Get all orders (All staff)
 orderRouter.route("/getAllOrders").get(authenticateToken,authorizeRoles('admin','superadmin'),getAllOrders);

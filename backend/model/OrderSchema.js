@@ -90,7 +90,7 @@ const OrderSchema = new Schema({
     },
 
     // Printing Info
-    Shopid: {
+    ShopId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'printingPressunit',
         required: true
