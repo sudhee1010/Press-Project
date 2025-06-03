@@ -25,6 +25,7 @@ import ThankYou from "./pages/Thankyou";
 import { roleGuard } from "../utils/roleGuard";
 import roleRedirectLoader from "../utils/roleRedirectLoader";
 import WalkInOrderForm from "./pages/WalkInOrderForm";
+import CustomerProfileScreen from "./pages/CustomerProfileScreen";
 
 /*
 // Public Pages
@@ -120,7 +121,7 @@ const router = createBrowserRouter([
     // loader: customerLoader,
     children: [
       // { index: true, element: <CustomerDashboard /> },
-      // { path: "new-order", element: <CreateOrder /> },
+      { path: "profile", element: <CustomerProfileScreen /> },
       // { path: "orders", element: <MyOrders /> },
       // { path: "profile", element: <CustomerProfile /> },
       // { path: "support", element: <CustomerSupport /> },
