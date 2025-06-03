@@ -1,4 +1,4 @@
-import { useState ,useEffect} from "react";
+import { useState, useEffect } from "react";
 import { useShopRegisterMutation } from "../slices/shopSlice.js";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -13,16 +13,16 @@ function RegisterShop() {
     address: "",
   });
 
-//   const [error, setError] = useState("");
+  //   const [error, setError] = useState("");
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
 
   const navigate = useNavigate();
   const [ShopRegister] = useShopRegisterMutation();
 
-    const validate = () => {
+  const validate = () => {
     const newErrors = {};
-    
+
     const {
       name,
       email,
@@ -43,20 +43,40 @@ function RegisterShop() {
     if (!whatsapp) newErrors.whatsapp = "WhatsApp number is required";
     if (!address.trim()) newErrors.address = "Address is required";
 
+    // if (!password) {
+    //   newErrors.password = "Password is required";
+    // } else {
+    //   if (password.length < 8)
+    //     newErrors.password = "Password must be at least 8 characters";
+    //   else if (!/[a-z]/.test(password))
+    //     newErrors.password = "Password must include a lowercase letter";
+    //   else if (!/[A-Z]/.test(password))
+    //     newErrors.password = "Password must include an uppercase letter";
+    //   else if (!/\d/.test(password))
+    //     newErrors.password = "Password must include a number";
+    //   else if (!/[@$!%*?&]/.test(password))
+    //     newErrors.password =
+    //       "Password must include a special character (@$!%*?&)";
+    // }
     if (!password) {
       newErrors.password = "Password is required";
     } else {
+      const pwdErrors = [];
+
       if (password.length < 8)
-        newErrors.password = "Password must be at least 8 characters";
-      else if (!/[a-z]/.test(password))
-        newErrors.password = "Password must include a lowercase letter";
-      else if (!/[A-Z]/.test(password))
-        newErrors.password = "Password must include an uppercase letter";
-      else if (!/\d/.test(password))
-        newErrors.password = "Password must include a number";
-      else if (!/[@$!%*?&]/.test(password))
-        newErrors.password =
-          "Password must include a special character (@$!%*?&)";
+        pwdErrors.push("at least 8 characters");
+      if (!/[a-z]/.test(password))
+        pwdErrors.push("a lowercase letter");
+      if (!/[A-Z]/.test(password))
+        pwdErrors.push("an uppercase letter");
+      if (!/\d/.test(password))
+        pwdErrors.push("a number");
+      if (!/[@$!%*?&]/.test(password))
+        pwdErrors.push("a special character (@$!%*?&)");
+
+      if (pwdErrors.length > 0) {
+        newErrors.password = "Password must include " + pwdErrors.join(", ");
+      }
     }
 
     if (!confirmPassword)
@@ -67,16 +87,16 @@ function RegisterShop() {
     return newErrors;
   };
 
-    useEffect(() => {
-      if (Object.keys(touched).length > 0) {
-        setErrors(validate());
-      }
-    }, [form, touched]);
+  useEffect(() => {
+    if (Object.keys(touched).length > 0) {
+      setErrors(validate());
+    }
+  }, [form, touched]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     // setForm({ ...form, [name]: value });
-     setForm((prev) => ({ ...prev, [name]: value }));
+    setForm((prev) => ({ ...prev, [name]: value }));
     // setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
@@ -129,16 +149,15 @@ function RegisterShop() {
         address: "",
       });
     } catch (error) {
-    //   setError(error?.data?.error || "Registration failed!");
+      //   setError(error?.data?.error || "Registration failed!");
       console.log(error, "error");
     }
   };
 
   const inputClass = (field) =>
-    `w-full rounded-full border px-4 py-2.5 mt-1 transition ${
-      errors[field] && touched[field]
-        ? "border-red-500"
-        : "border-gray-300 focus:border-indigo-500"
+    `w-full rounded-full border px-4 py-2.5 mt-1 transition ${errors[field] && touched[field]
+      ? "border-red-500"
+      : "border-gray-300 focus:border-indigo-500"
     }`;
 
   const errorText = (field) =>
@@ -147,9 +166,9 @@ function RegisterShop() {
     ) : null;
 
 
- 
 
-  
+
+
 
   return (
     <form
@@ -173,7 +192,7 @@ function RegisterShop() {
             onChange={handleChange}
             onBlur={handleBlur}
             className={inputClass("name")}
-            // required
+          // required
           />
           {errorText("name")}
         </div>
@@ -186,7 +205,7 @@ function RegisterShop() {
             onChange={handleChange}
             onBlur={handleBlur}
             className={inputClass("email")}
-            // required
+          // required
           />
           {errorText("email")}
         </div>
@@ -199,7 +218,7 @@ function RegisterShop() {
             onChange={handleChange}
             onBlur={handleBlur}
             className={inputClass("phone")}
-            // required
+          // required
           />
           {errorText("phone")}
         </div>
@@ -212,7 +231,7 @@ function RegisterShop() {
             onChange={handleChange}
             onBlur={handleBlur}
             className={inputClass("whatsapp")}
-            // required
+          // required
           />
           {errorText("whatsapp")}
         </div>
@@ -225,7 +244,7 @@ function RegisterShop() {
             onChange={handleChange}
             onBlur={handleBlur}
             className={inputClass("address")}
-            // required
+          // required
           />
           {errorText("address")}
         </div>
@@ -238,7 +257,7 @@ function RegisterShop() {
             onChange={handleChange}
             onBlur={handleBlur}
             className={inputClass("password")}
-            // required
+          // required
           />
           {errorText("password")}
         </div>
@@ -251,7 +270,7 @@ function RegisterShop() {
             onChange={handleChange}
             onBlur={handleBlur}
             className={inputClass("confirmPassword")}
-            // required
+          // required
           />
           {errorText("confirmPassword")}
         </div>

@@ -12,7 +12,7 @@ function CustomerLogin() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const redirect = searchParams.get("redirect") || "/";
+  const redirect = searchParams.get("redirect") || "/customer-profile";
 
   const [login] = useCustomerLoginMutation();
 

@@ -1,7 +1,7 @@
 import { Order } from '../model/OrderSchema.js';
 
 // Create a new Order
-const createOrder = async (req, res) => {
+const CreateOrder = async (req, res) => {
     try {
         const shopId=req.user?.shopId;
         const onlineCustomerid=req.body;
@@ -70,4 +70,4 @@ const deleteOrder = async (req, res) => {
     }
 };
 
-export { createOrder, getAllOrders, getOrderById, updateOrder, deleteOrder };
+export { CreateOrder, getAllOrders, getOrderById, updateOrder, deleteOrder };

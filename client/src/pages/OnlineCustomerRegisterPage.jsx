@@ -149,6 +149,7 @@ const OnlineCustomerRegisterPage = () => {
         whatsapp: form.whatsapp,
         address: form.address,
       }).unwrap();
+const redirect = searchParams.get("redirect") || "/customer-profile";
 
       dispatch(setCredentials({ ...res }));
       // setError("Registration successful!")
