@@ -26,6 +26,7 @@ import { roleGuard } from "../utils/roleGuard";
 import roleRedirectLoader from "../utils/roleRedirectLoader";
 import WalkInOrderForm from "./pages/WalkInOrderForm";
 import CustomerProfileScreen from "./pages/CustomerProfileScreen";
+import SuperAdminLogin from "./pages/SuperAdminLogin";
 
 /*
 // Public Pages
@@ -86,6 +87,7 @@ const router = createBrowserRouter([
       // { path: '*', element: <NotFound /> },
     ],
   },
+  { path: "login-superadmin", element: <SuperAdminLogin /> },
   {
     path: "/admin",
     element: <DashboardLayout />,
