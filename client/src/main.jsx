@@ -25,6 +25,8 @@ import ThankYou from "./pages/Thankyou";
 import { roleGuard } from "../utils/roleGuard";
 import roleRedirectLoader from "../utils/roleRedirectLoader";
 import WalkInOrderForm from "./pages/WalkInOrderForm";
+import CustomerProfileScreen from "./pages/CustomerProfileScreen";
+import SuperAdminLogin from "./pages/SuperAdminLogin";
 
 /*
 // Public Pages
@@ -85,6 +87,7 @@ const router = createBrowserRouter([
       // { path: '*', element: <NotFound /> },
     ],
   },
+  { path: "login-superadmin", element: <SuperAdminLogin /> },
   {
     path: "/admin",
     element: <DashboardLayout />,
@@ -120,7 +123,7 @@ const router = createBrowserRouter([
     // loader: customerLoader,
     children: [
       // { index: true, element: <CustomerDashboard /> },
-      // { path: "new-order", element: <CreateOrder /> },
+      { path: "profile", element: <CustomerProfileScreen /> },
       // { path: "orders", element: <MyOrders /> },
       // { path: "profile", element: <CustomerProfile /> },
       // { path: "support", element: <CustomerSupport /> },
