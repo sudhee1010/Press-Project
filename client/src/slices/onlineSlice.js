@@ -24,21 +24,22 @@ export const onlineSlice = apiSlice.injectEndpoints({
       }),
     }),
     CustomerProfile: builder.query({
-      query: (data) => ({
+      query: () => ({
         url: `${CUSTOMERS_URL}/getOnlineCustomerProfile`,
+        method: "GET",
+      }),
+      providesTags: ["Customer"],
+      refetchOnMountOrArgChange: true,
+    }),
+
+    CustomerProfileid: builder.query({
+      query: (userId) => ({
+        url: `${CUSTOMERS_URL}/${userId}`,
         method: "GET",
         body: data,
       }),
     }),
-    
-    CustomerProfileid: builder.query({
-        query: (userId) => ({
-          url: `${CUSTOMERS_URL}/${userId}`,
-          method: "GET",
-          body: data,
-        }),
-      }),
-  
+
 
     getCustomer: builder.query({
       query: () => ({
@@ -59,13 +60,21 @@ export const onlineSlice = apiSlice.injectEndpoints({
       }),
       keepUnusedDataFor: 5,
     }),
+    // updateCustomer: builder.mutation({
+    //   query: (data) => ({
+    //     url: `${CUSTOMERS_URL}/${data.userId}`,
+    //     method: "PUT",
+    //     body: "data",
+    //   }),
+    //   invalidatesTags: ["Users"],
+    // }),
+
     updateCustomer: builder.mutation({
       query: (data) => ({
-        url: `${CUSTOMERS_URL}/${data.userId}`,
+        url: `${CUSTOMERS_URL}/updateOnlineCustomer`,
         method: "PUT",
-        body: "data",
+        body: data,
       }),
-      invalidatesTags: ["Users"],
     }),
   }),
 });
@@ -75,7 +84,7 @@ export const {
   useCustomerRegisterMutation,
   useCustomerLogoutMutation,
   useLazyCustomerProfileQuery,
-  useCustomerProfileidQuery,
+  useCustomerProfileQuery,
   useGetCustomerQuery,
   useDeleteCustomerMutation,
   useGetCustomerDetailsQuery,
