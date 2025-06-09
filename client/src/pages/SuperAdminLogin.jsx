@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useLoginMutation, useRegisterMutation } from "../slices/usersApiSlice";
+import { useLoginMutation } from "../slices/usersApiSlice";
 import { setCredentials } from "../slices/authSlice";
 import { useDispatch } from "react-redux";
 // import {  useSearchParams } from "react-router-dom";
