@@ -12,7 +12,7 @@ const CreateOrder = async (req, res) => {
 
         const order = await Order.create({
           ...req.body,
-          Shopid: shopId,  
+          shopId: shopId,  
           onlineCustomerid:onlineCustomerid||null
         });
         res.status(201).json(order);

@@ -5,7 +5,7 @@ const OrderSchema = new Schema({
     walkInCustomer: {
         name: { type: String, required: true },
         phone: { type: String, required: true },
-        email: { type: String, required: true }
+        // email: { type: String, required: true }
     },
 
     onlineCustomer: {
@@ -28,16 +28,15 @@ const OrderSchema = new Schema({
     }, // e.g., brochure, banner
 
     specifications: {
-        size: { type: String, required: true },
-        quantity: { type: Number, required: true },
-        material: { type: String, required: true }
+        size: { type: String },
+        quantity: { type: Number},
+        material: { type: String}
 
     },
 
-    deadline: {
-        type: Date,
-        required: true,
-    },
+    // deadline: {
+    //     type: Date
+    // },
     notes: String,
 
     // Workflow Status
@@ -75,12 +74,10 @@ const OrderSchema = new Schema({
     designFiles: [String],
     // Billing Info
     totalAmount: {
-        type: Number,
-        required: true
+        type: Number
     },
     amountPaid: {
-        type: Number,
-        required: true
+        type: Number
     },
 
     paymentStatus: {
@@ -90,7 +87,7 @@ const OrderSchema = new Schema({
     },
 
     // Printing Info
-    ShopId: {
+    shopId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'printingPressunit',
         required: true
