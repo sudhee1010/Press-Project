@@ -27,6 +27,7 @@ import roleRedirectLoader from "../utils/roleRedirectLoader";
 import WalkInOrderForm from "./pages/WalkInOrderForm";
 import CustomerProfileScreen from "./pages/CustomerProfileScreen";
 import SuperAdminLogin from "./pages/SuperAdminLogin";
+import SuperAdminDashboard from "./pages/SuperAdminDashboard";
 
 /*
 // Public Pages
@@ -76,7 +77,6 @@ const router = createBrowserRouter([
       { path: "register-shop", element: <RegisterShop /> },
       { path: "login-shop", element: <ShopLogin /> },
       { path: "login-employee", element: <LoginEmployee /> },
-      { path: "shop-list", element: <ShopApprovalList /> },
       { path: "thank-you", element: <ThankYou /> },
       // { path: 'forgot-password', element: <ForgotPassword /> },
       // { path: 'reset-password/:token', element: <ResetPassword /> },
@@ -108,9 +108,10 @@ const router = createBrowserRouter([
   {
     path: "/superadmin",
     element: <DashboardLayout />,
-    // loader: superAdminLoader,
+    loader: () => roleGuard(["superadmin"]),
     children: [
-      // { index: true, element: <SuperAdminDashboard /> },
+      { index: true, element: <SuperAdminDashboard /> },
+      { path: "shop-list", element: <ShopApprovalList /> },
       // { path: "shops", element: <ShopList /> },
       // { path: "approve-shops", element: <ApproveShopRequests /> },
       // { path: "roles", element: <ManageRoles /> },
