@@ -1,50 +1,134 @@
-import { useState } from "react";
+
+
+import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "../slices/authSlice";
 import { useShoploginMutation } from "../slices/shopSlice";
-import { FiEye, FiEyeOff } from "react-icons/fi";
+import { FiEye, FiEyeOff, FiMail, FiLock } from "react-icons/fi";
 
 function ShopLogin() {
   const [form, setForm] = useState({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
+  const [touched, setTouched] = useState({});
+
+  const [passwordCriteria, setPasswordCriteria] = useState({
+    length: false,
+    lowercase: false,
+    uppercase: false,
+    number: false,
+    specialChar: false,
+  });
+
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const redirect = searchParams.get("redirect") || "/admin";
 
-  const [ShopLogin] = useShoploginMutation();
+  const [ShopLogin, { isLoading }] = useShoploginMutation();
 
-  // Handle form input changes
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+  const validate = () => {
+    const newErrors = {};
+    const { email, password } = form;
+
+    if (!email) newErrors.email = "Email is required";
+    else if (!/^\S+@\S+\.\S+$/.test(email)) newErrors.email = "Invalid email format";
+
+    if (!password) {
+      newErrors.password = "Password is required";
+    }
+    // } else {
+    //   if (password.length < 10)
+    //     newErrors.password = "Password must be at least 10 characters";
+    //   else if (!/[a-z]/.test(password))
+    //     newErrors.password = "Password must include a lowercase letter";
+    //   else if (!/[A-Z]/.test(password))
+    //     newErrors.password = "Password must include an uppercase letter";
+    //   else if (!/\d/.test(password))
+    //     newErrors.password = "Password must include a number";
+    //   else if (!/[@$!%*?&]/.test(password))
+    //     newErrors.password = "Password must include a special character (@$!%*?&)";
+    // }
+
+    return newErrors;
   };
 
-  // Handle form submit
+  useEffect(() => {
+    if (Object.keys(touched).length > 0) {
+      setError(validate());
+    }
+  }, [form, touched]);
+
+  const checkPasswordCriteria = (password) => {
+    setPasswordCriteria({
+      length: password.length >= 10,
+      lowercase: /[a-z]/.test(password),
+      uppercase: /[A-Z]/.test(password),
+      number: /\d/.test(password),
+      specialChar: /[@$!%*?&]/.test(password),
+    });
+  };
+
+
+
+  const handleChange = ({ target: { name, value } }) => {
+    setForm((prev) => ({ ...prev, [name]: value }));
+    if (name === "password") {
+      checkPasswordCriteria(value);
+    }
+  };
+
+  const handleBlur = (e) => {
+    setTouched((prev) => ({ ...prev, [e.target.name]: true }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
+    const validationErrors = validate();
+    if (Object.keys(validationErrors).length > 0) {
+      setError(validationErrors);
+      setTouched({ email: true, password: true });
+      return;
+    }
+
     try {
-      // Call the login API mutation
       const res = await ShopLogin(form).unwrap();
-      dispatch(setCredentials(res.user)); // Store user in redux state
-      navigate(redirect); // Redirect after successful login
+      dispatch(setCredentials(res.user));
+      navigate(redirect);
     } catch (err) {
-      // Handle different error cases from backend validation
-      if (err?.data?.approval) {
+      console.log("Login error:", err);
+
+      const backendErrors = err?.data?.errors || {};
+      const message = err?.data?.message || "";
+
+      if (backendErrors.approval) {
         setError("Your account is not approved yet. Please wait.");
-      } else if (err?.data?.email) {
+      } else if (backendErrors.email) {
         setError("Email not found.");
-      } else if (err?.data?.password) {
+      } else if (backendErrors.password) {
         setError("Incorrect password.");
+      } else if (message.includes("not approved")) {
+        setError("Your account is not approved yet. Please wait.");
       } else {
         setError("Login failed. Please try again.");
       }
     }
   };
+
+  // const inputClass = (field) =>
+  //   `w-full rounded-full border px-4 py-2.5 mt-1 transition bg-transparent outline-none text-sm ${error[field] && touched[field]
+  //     ? "border-red-500"
+  //     : "border-gray-300 focus:border-indigo-500"
+  //   }`;
+
+  const errorText = (field) =>
+    error[field] && touched[field] ? (
+      <p className="text-xs text-red-500 mt-1">{error[field]}</p>
+    ) : null;
 
   return (
     <form
@@ -54,57 +138,80 @@ function ShopLogin() {
       <h1 className="text-gray-900 text-3xl mt-10 font-medium">Shop Login</h1>
       <p className="text-gray-500 text-sm mt-2">Please sign in to continue</p>
 
-      {error && <p className="text-red-500 text-sm mt-4 text-center">{error}</p>}
+      {typeof error === "string" && (
+        <p className="text-red-500 text-sm mb-4 text-center">{error}</p>
+      )}
 
-      {/* Email Input */}
-      <div className="flex items-center w-full mt-10 bg-white border border-gray-300/80 h-12 rounded-full overflow-hidden pl-6 gap-2">
-        <svg width="16" height="11" fill="none" aria-hidden="true">
-          <path
-            fillRule="evenodd"
-            clipRule="evenodd"
-            d="M0 .55.571 0H15.43l.57.55v9.9l-.571.55H.57L0 10.45zm1.143 1.138V9.9h13.714V1.69l-6.503 4.8h-.697zM13.749 1.1H2.25L8 5.356z"
-            fill="#6B7280"
+      <div className="w-full mt-6">
+        <div className="flex items-center bg-white border border-gray-300/80 h-12 rounded-full pl-6 gap-2">
+          <FiMail className="text-gray-500" />
+          <input
+            type="email"
+            name="email"
+            placeholder="Email id"
+            className="w-full bg-transparent outline-none text-sm"
+            value={form.email}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            autoComplete="email"
+            aria-label="Email"
           />
-        </svg>
-        <input
-          type="email"
-          name="email"
-          placeholder="Email id"
-          className="bg-transparent text-gray-500 placeholder-gray-500 outline-none text-sm w-full h-full"
-          value={form.email}
-          onChange={handleChange}
-          required
-          aria-label="Email"
-        />
+        </div>
+        {errorText("email")}
       </div>
 
-      {/* Password Input */}
-      <div className="relative flex items-center mt-4 w-full bg-white border border-gray-300/80 h-12 rounded-full overflow-hidden pl-6 gap-2">
-        <svg width="13" height="17" fill="none" aria-hidden="true">
-          <path
-            d="M13 8.5c0-.938-.729-1.7-1.625-1.7h-.812V4.25C10.563 1.907 8.74 0 6.5 0S2.438 1.907 2.438 4.25V6.8h-.813C.729 6.8 0 7.562 0 8.5v6.8c0 .938.729 1.7 1.625 1.7h9.75c.896 0 1.625-.762 1.625-1.7zM4.063 4.25c0-1.406 1.093-2.55 2.437-2.55s2.438 1.144 2.438 2.55V6.8H4.061z"
-            fill="#6B7280"
+
+      <div className="w-full mt-4">
+        <div className="relative flex items-center bg-white border border-gray-300/80 h-12 rounded-full pl-6 gap-2">
+          <FiLock className="text-gray-500" />
+          <input
+            type={showPassword ? "text" : "password"}
+            name="password"
+            placeholder="Password"
+            className="w-full bg-transparent outline-none text-sm"
+            value={form.password}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            autoComplete="current-password"
+            aria-label="Password"
           />
-        </svg>
-        <input
-          type={showPassword ? "text" : "password"}
-          name="password"
-          placeholder="Password"
-          className="bg-transparent text-gray-500 placeholder-gray-500 outline-none text-sm w-full h-full pr-10"
-          value={form.password}
-          onChange={handleChange}
-          required
-          aria-label="Password"
-        />
-        <button
-          type="button"
-          onClick={() => setShowPassword((prev) => !prev)}
-          className="absolute right-4 text-gray-500 cursor-pointer focus:outline-none"
-          aria-label={showPassword ? "Hide password" : "Show password"}
-        >
-          {showPassword ? <FiEyeOff /> : <FiEye />}
-        </button>
+          <button
+            type="button"
+            onClick={() => setShowPassword((prev) => !prev)}
+            className="absolute right-4 text-gray-500"
+            aria-label={showPassword ? "Hide password" : "Show password"}
+          >
+            {showPassword ? <FiEyeOff /> : <FiEye />}
+          </button>
+        </div>
+        {errorText("password")}
+
+        {/* Password criteria display */}
+        {form.password && (
+          <div className="bg-gray-50 p-3 mt-2 rounded-md text-left border text-xs">
+            <ul className="space-y-1">
+              <li className={passwordCriteria.length ? "text-green-600" : "text-gray-400"}>
+                • At least 10 characters
+              </li>
+              <li className={passwordCriteria.lowercase ? "text-green-600" : "text-gray-400"}>
+                • Contains lowercase letter
+              </li>
+              <li className={passwordCriteria.uppercase ? "text-green-600" : "text-gray-400"}>
+                • Contains uppercase letter
+              </li>
+              <li className={passwordCriteria.number ? "text-green-600" : "text-gray-400"}>
+                • Contains number
+              </li>
+              <li className={passwordCriteria.specialChar ? "text-green-600" : "text-gray-400"}>
+                • Contains special character (@$!%*?&)
+              </li>
+            </ul>
+          </div>
+        )}
       </div>
+
+
+
 
       <div className="mt-5 text-left text-indigo-500">
         <Link to="/forgot-password" className="text-sm hover:underline">
@@ -114,9 +221,10 @@ function ShopLogin() {
 
       <button
         type="submit"
-        className="mt-2 w-full h-11 rounded-full text-white bg-indigo-500 hover:opacity-90 transition-opacity"
+        disabled={isLoading}
+        className="mt-2 w-full h-11 rounded-full text-white bg-indigo-500 hover:opacity-90 transition-opacity disabled:opacity-50"
       >
-        Login
+        {isLoading ? "Logging in..." : "Login"}
       </button>
 
       <p className="text-gray-500 text-sm mt-3 mb-11">
@@ -130,3 +238,4 @@ function ShopLogin() {
 }
 
 export default ShopLogin;
+

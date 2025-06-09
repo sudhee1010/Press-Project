@@ -103,19 +103,32 @@ const onlineCustomerProfile = async (req, res) => {
 
 
 //for viewing profile by customer itself
+// const getOnlineCustomerProfile = async (req, res) => {
+//     try {
+//         const customer = await OnlineCustomer.findById(req.user.userId).select("-password");
+
+//         if (!customer) {
+//             return res.status(404).json({ message: "Customer not found" });
+//         }
+
+//         res.status(200).json({ data: customer });
+//     } catch (error) {
+//         res.status(500).json({ message: "Error fetching profile", error: error.message });
+//     }
+// };
 const getOnlineCustomerProfile = async (req, res) => {
-    try {
-        const customer = await OnlineCustomer.findById(req.user.userId).select("-password");
-
-        if (!customer) {
-            return res.status(404).json({ message: "Customer not found" });
-        }
-
-        res.status(200).json({ data: customer });
-    } catch (error) {
-        res.status(500).json({ message: "Error fetching profile", error: error.message });
+  try {
+    const customer = await OnlineCustomer.findById(req.user.userId).select("-password");
+    if (!customer) {
+      return res.status(404).json({ message: "Customer not found" });
     }
+    res.json(customer);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
 };
+
 
 
 //for file uploading
