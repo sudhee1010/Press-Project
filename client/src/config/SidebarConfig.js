@@ -1,8 +1,8 @@
 export const sidebars = {
   superadmin: [
-    { label: "Dashboard", path: "/superadmin/dashboard" },
-    { label: "Manage Shops", path: "/superadmin/shops" },
-    { label: "Employees", path: "/superadmin/employees" },
+    { label: "Shop Approval", path: "/superadmin/shop-list" },
+    { label: "Logout", path: "/superadmin/logout" },
+    // { label: "Employees", path: "/superadmin/employees" },
   ],
   admin: [
     // { label: "Dashboard", path: "/admin" },

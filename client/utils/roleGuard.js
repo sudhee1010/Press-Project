@@ -7,7 +7,7 @@ export const roleGuard = (allowedRoles = []) => {
   const state = store.getState();
   const user = state.auth?.userInfo;
   // console.log(state);
-  // console.log(user);
+  console.log(user);
   if (!user) {
     // Not logged in
     return redirect("/");

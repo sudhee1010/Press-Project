@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useLoginMutation } from "../slices/usersApiSlice";
 import { setCredentials } from "../slices/authSlice";
 import { useDispatch } from "react-redux";
-// import {  useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 // import { useDispatch } from "react-redux";
 // import { setCredentials } from "../slices/authSlice";
 
@@ -10,14 +10,15 @@ function SuperAdminLogin() {
   const [formData, setFormData] = useState({
     email: "superadmin@yourcompany.com",
     password: "supersecurepassword",
+    role: "superadmin",
   });
 
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
   const dispatch = useDispatch();
-  // const navigate = useNavigate();
-  // const [searchParams] = useSearchParams();
-  // const redirect = searchParams.get("redirect") || "/";
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const redirect = searchParams.get("redirect") || "/superadmin";
   // const [register] = useRegisterMutation();
   const [login] = useLoginMutation();
 
@@ -72,7 +73,7 @@ function SuperAdminLogin() {
       console.log(res);
 
       dispatch(setCredentials({ ...res }));
-      // navigate(redirect);
+      navigate("/superadmin");
     } catch (error) {
       console.error(error);
     }
