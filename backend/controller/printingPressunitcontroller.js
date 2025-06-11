@@ -221,8 +221,6 @@ const signin = async (req, res) => {
   }
 };
 
-
-
 // Verify (approve) printing unit (superadmin only)
 const verifyPrintingUnit = async (req, res) => {
   try {
@@ -231,21 +229,22 @@ const verifyPrintingUnit = async (req, res) => {
       return res.status(404).json({ message: 'Printing unit not found' });
     }
 
-    unit.approval = true;  // approved for login
-    unit.verified = true;  // optional verification flag
+    unit.approval = true;      // Mark as approved
+    unit.verified = true;      // Optional flag
+    unit.rejected = false;     // Reset rejection if previously rejected
+
     await unit.save();
 
-    const payload = {
-      shopId: unit._id,
-      role: unit.role
-    };
-    generateToken(res, payload);
-
-    res.status(200).json({ message: 'Printing unit verified successfully', data: unit });
+    res.status(200).json({
+      message: 'Printing unit verified successfully',
+      data: unit,
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
-}
+};
+
+
 // Logout
 const adminLogout = (req, res) => {
     res.clearCookie("jwt", {
@@ -286,6 +285,8 @@ const adminupdateUnit = async (req, res) => {
     }
 };
 
+
+
 // Reject (or deactivate) a printing unit (superadmin only)
 const rejectPrintingUnit = async (req, res) => {
   try {
@@ -294,15 +295,21 @@ const rejectPrintingUnit = async (req, res) => {
       return res.status(404).json({ message: 'Printing unit not found' });
     }
 
-    unit.approval = false;   // ensure not approved
-    unit.rejected = true;    // custom field to mark as rejected
+    unit.approval = false;     // Ensure not approved
+    unit.rejected = true;      // Mark as rejected
+    unit.verified = false;     // Optional: reset verification
+
     await unit.save();
 
-    res.status(200).json({ message: 'Printing unit rejected successfully', data: unit });
+    res.status(200).json({
+      message: 'Printing unit rejected successfully',
+      data: unit,
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
+
 
 
 

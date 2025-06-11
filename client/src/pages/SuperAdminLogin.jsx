@@ -2,22 +2,23 @@ import { useState, useEffect } from "react";
 import { useLoginMutation } from "../slices/usersApiSlice";
 import { setCredentials } from "../slices/authSlice";
 import { useDispatch } from "react-redux";
-// import {  useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 // import { useDispatch } from "react-redux";
 // import { setCredentials } from "../slices/authSlice";
 
-function LoginEmployee() {
+function SuperAdminLogin() {
   const [formData, setFormData] = useState({
     email: "superadmin@yourcompany.com",
     password: "supersecurepassword",
+    role: "superadmin",
   });
 
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
   const dispatch = useDispatch();
-  // const navigate = useNavigate();
-  // const [searchParams] = useSearchParams();
-  // const redirect = searchParams.get("redirect") || "/";
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const redirect = searchParams.get("redirect") || "/superadmin";
   // const [register] = useRegisterMutation();
   const [login] = useLoginMutation();
 
@@ -72,7 +73,7 @@ function LoginEmployee() {
       console.log(res);
 
       dispatch(setCredentials({ ...res }));
-      // navigate(redirect);
+      navigate("/superadmin");
     } catch (error) {
       console.error(error);
     }
@@ -97,7 +98,7 @@ function LoginEmployee() {
         className="bg-white text-gray-700 w-full max-w-sm mx-4 md:p-6 p-4 text-left text-sm rounded-xl shadow-[0px_0px_10px_0px] shadow-black/10 space-y-4"
       >
         <h2 className="text-2xl font-semibold mb-2 text-center text-gray-800">
-          Login
+          Super Admin Login
         </h2>
 
         {/* <div>
@@ -163,4 +164,4 @@ function LoginEmployee() {
   );
 }
 
-export default LoginEmployee;
+export default SuperAdminLogin;

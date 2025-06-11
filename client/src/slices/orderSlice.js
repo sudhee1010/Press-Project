@@ -1,12 +1,13 @@
 import { apiSlice } from "./apiSlice";
 import { ORDER_URL } from "../../constants";
+import { CreateOrder } from "../../../backend/controller/orderController";
 
 export const orderApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     // Create a new order (Walk-In)
     CreateOrder: builder.mutation({
       query: (data) => ({
-        url: `${ORDER_URL}`,
+        url: `${ORDER_URL}/CreateOrder`,
         method: "POST",
         body: data,
         credentials: "include", // for cookie-based auth
