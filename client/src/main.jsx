@@ -30,6 +30,7 @@ import SuperAdminLogin from "./pages/SuperAdminLogin";
 import SuperAdminDashboard from "./pages/SuperAdminDashboard";
 import NotFound from "./pages/NotFound";
 import WalkInToken from "./components/WalkInToken";
+import CustomerDashboard from "./pages/CustomerDashboard";
 
 /*
 // Public Pages
@@ -127,7 +128,7 @@ const router = createBrowserRouter([
     element: <DashboardLayout />,
     // loader: customerLoader,
     children: [
-      // { index: true, element: <CustomerDashboard /> },
+      { index: true, element: <CustomerDashboard /> },
       { path: "profile", element: <CustomerProfileScreen /> },
       // { path: "orders", element: <MyOrders /> },
       // { path: "profile", element: <CustomerProfile /> },
