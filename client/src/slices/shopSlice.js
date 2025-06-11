@@ -29,6 +29,7 @@ export const ShopApiSlice = apiSlice.injectEndpoints({
       query: () => ({
         url: `${SHOP_URL}/getallunits`,
       }),
+      providesTags: ["Units"],
       keepUnusedDataFor: 5,
     }),
     // Add verify unit

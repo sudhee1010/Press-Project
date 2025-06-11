@@ -13,15 +13,6 @@ function ShopLogin() {
   const [error, setError] = useState("");
   const [touched, setTouched] = useState({});
 
-  const [passwordCriteria, setPasswordCriteria] = useState({
-    length: false,
-    lowercase: false,
-    uppercase: false,
-    number: false,
-    specialChar: false,
-  });
-
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -38,19 +29,17 @@ function ShopLogin() {
 
     if (!password) {
       newErrors.password = "Password is required";
+    } else {
+      const pwdErrors = [];
+      if (password.length < 8) pwdErrors.push("at least 8 characters");
+      if (!/[a-z]/.test(password)) pwdErrors.push("a lowercase letter");
+      if (!/[A-Z]/.test(password)) pwdErrors.push("an uppercase letter");
+      if (!/\d/.test(password)) pwdErrors.push("a number");
+      if (!/[@$!%*?&]/.test(password)) pwdErrors.push("a special character (@$!%*?&)");
+      if (pwdErrors.length > 0) {
+        newErrors.password = "Password must include " + pwdErrors.join(", ");
+      }
     }
-    // } else {
-    //   if (password.length < 10)
-    //     newErrors.password = "Password must be at least 10 characters";
-    //   else if (!/[a-z]/.test(password))
-    //     newErrors.password = "Password must include a lowercase letter";
-    //   else if (!/[A-Z]/.test(password))
-    //     newErrors.password = "Password must include an uppercase letter";
-    //   else if (!/\d/.test(password))
-    //     newErrors.password = "Password must include a number";
-    //   else if (!/[@$!%*?&]/.test(password))
-    //     newErrors.password = "Password must include a special character (@$!%*?&)";
-    // }
 
     return newErrors;
   };
@@ -61,23 +50,12 @@ function ShopLogin() {
     }
   }, [form, touched]);
 
-  const checkPasswordCriteria = (password) => {
-    setPasswordCriteria({
-      length: password.length >= 10,
-      lowercase: /[a-z]/.test(password),
-      uppercase: /[A-Z]/.test(password),
-      number: /\d/.test(password),
-      specialChar: /[@$!%*?&]/.test(password),
-    });
-  };
+  
 
 
 
   const handleChange = ({ target: { name, value } }) => {
     setForm((prev) => ({ ...prev, [name]: value }));
-    if (name === "password") {
-      checkPasswordCriteria(value);
-    }
   };
 
   const handleBlur = (e) => {
@@ -142,73 +120,52 @@ function ShopLogin() {
         <p className="text-red-500 text-sm mb-4 text-center">{error}</p>
       )}
 
-      <div className="w-full mt-6">
-        <div className="flex items-center bg-white border border-gray-300/80 h-12 rounded-full pl-6 gap-2">
-          <FiMail className="text-gray-500" />
-          <input
-            type="email"
-            name="email"
-            placeholder="Email id"
-            className="w-full bg-transparent outline-none text-sm"
-            value={form.email}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            autoComplete="email"
-            aria-label="Email"
-          />
-        </div>
-        {errorText("email")}
-      </div>
+    <div className="w-full mt-6">
+  <div className="relative flex items-center bg-white border h-12 rounded-full pl-6 pr-4 gap-2 border-gray-300/80">
+    <FiMail className="text-gray-500" />
+    <input
+      type="email"
+      name="email"
+      placeholder="Email id"
+      value={form.email}
+      onChange={handleChange}
+      onBlur={handleBlur}
+      autoComplete="email"
+      aria-label="Email"
+      className="w-full bg-transparent outline-none text-sm"
+    />
+  </div>
+  {errorText("email")}
+</div>
 
 
-      <div className="w-full mt-4">
-        <div className="relative flex items-center bg-white border border-gray-300/80 h-12 rounded-full pl-6 gap-2">
-          <FiLock className="text-gray-500" />
-          <input
-            type={showPassword ? "text" : "password"}
-            name="password"
-            placeholder="Password"
-            className="w-full bg-transparent outline-none text-sm"
-            value={form.password}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            autoComplete="current-password"
-            aria-label="Password"
-          />
-          <button
-            type="button"
-            onClick={() => setShowPassword((prev) => !prev)}
-            className="absolute right-4 text-gray-500"
-            aria-label={showPassword ? "Hide password" : "Show password"}
-          >
-            {showPassword ? <FiEyeOff /> : <FiEye />}
-          </button>
-        </div>
-        {errorText("password")}
 
-        {/* Password criteria display */}
-        {form.password && (
-          <div className="bg-gray-50 p-3 mt-2 rounded-md text-left border text-xs">
-            <ul className="space-y-1">
-              <li className={passwordCriteria.length ? "text-green-600" : "text-gray-400"}>
-                • At least 10 characters
-              </li>
-              <li className={passwordCriteria.lowercase ? "text-green-600" : "text-gray-400"}>
-                • Contains lowercase letter
-              </li>
-              <li className={passwordCriteria.uppercase ? "text-green-600" : "text-gray-400"}>
-                • Contains uppercase letter
-              </li>
-              <li className={passwordCriteria.number ? "text-green-600" : "text-gray-400"}>
-                • Contains number
-              </li>
-              <li className={passwordCriteria.specialChar ? "text-green-600" : "text-gray-400"}>
-                • Contains special character (@$!%*?&)
-              </li>
-            </ul>
-          </div>
-        )}
-      </div>
+ <div className="w-full mt-4">
+  <div className="relative flex items-center bg-white border h-12 rounded-full pl-6 pr-12 gap-2 border-gray-300/80">
+    <FiLock className="text-gray-500" />
+    <input
+      type={showPassword ? "text" : "password"}
+      name="password"
+      placeholder="Password"
+      value={form.password}
+      onChange={handleChange}
+      onBlur={handleBlur}
+      autoComplete="current-password"
+      aria-label="Password"
+      className="w-full bg-transparent outline-none text-sm"
+    />
+    <button
+      type="button"
+      onClick={() => setShowPassword((prev) => !prev)}
+      className="absolute right-4 text-gray-500"
+      aria-label={showPassword ? "Hide password" : "Show password"}
+    >
+      {showPassword ? <FiEyeOff /> : <FiEye />}
+    </button>
+  </div>
+  {errorText("password")}
+</div>
+
 
 
 
