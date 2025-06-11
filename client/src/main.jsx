@@ -31,6 +31,7 @@ import SuperAdminDashboard from "./pages/SuperAdminDashboard";
 import NotFound from "./pages/NotFound";
 import WalkInToken from "./components/WalkInToken";
 import CustomerDashboard from "./pages/CustomerDashboard";
+import Unauthorized from "./pages/Unauthorized";
 
 /*
 // Public Pages
@@ -86,7 +87,7 @@ const router = createBrowserRouter([
       // { path: 'terms', element: <Terms /> },
       // { path: 'privacy', element: <Privacy /> },
       // { path: 'pending-approval', element: <PendingApproval /> },
-      // { path: 'unauthorized', element: <Unauthorized /> },
+      { path: "unauthorized", element: <Unauthorized /> },
       // { path: '*', element: <NotFound /> },
     ],
   },
