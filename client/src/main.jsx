@@ -98,6 +98,7 @@ const router = createBrowserRouter([
       //  { path: 'orders', element: <WalkInOrderForm/> },
       { path: "register", element: <RegisterEmploye /> },
       { path: "create-order", element: <WalkInOrderForm /> },
+      { path: "logout", element: <WalkInOrderForm /> },
 
       // { path: 'customers', element: <CustomerList /> },
       // { path: 'tokens', element: <TokenManagement /> },

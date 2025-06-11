@@ -8,6 +8,7 @@ export const sidebars = {
     // { label: "Dashboard", path: "/admin" },
     { label: "Register", path: "/admin/register" },
     { label: "Create order", path: "/admin/create-order" },
+    { label: "Logout", action: "logout" },
     // { label: "Payments", path: "/admin/payments" },
   ],
   designer: [
