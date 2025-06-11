@@ -58,7 +58,7 @@ function ShopApprovalList() {
 
   return (
     <div className="p-6 max-w-6xl mx-auto">
-      <ToastContainer />
+      <ToastContainer position="bottom-right" />
       <h2 className="text-2xl font-semibold mb-6">Shop Approval Panel</h2>
 
       <div className="overflow-x-auto">
